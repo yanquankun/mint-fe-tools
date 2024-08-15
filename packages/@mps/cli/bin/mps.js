@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const inquirer = require('inquirer');
 const version = require('../package.json').version;
 const execa = require('execa');
+const generator = require('../lib/generator');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -72,7 +73,13 @@ program
   .option('-d, --debug', '是否开启构建小程序debug模式')
   .description('构建小程序')
   .action((name) => {
-    console.log(name);
+    if (name.debug) {
+      console.log('打开debug模式');
+    }
+
+    // 注册构建模板
+    require('../lib/init.js')(generator);
+
     console.log(chalk.bgGreen.bgCyan('构建小程序'));
   });
 

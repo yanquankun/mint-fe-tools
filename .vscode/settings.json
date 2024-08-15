@@ -1,0 +1,7 @@
+{
+  "extension-test-runner.extractSettings": {
+    "suite": ["describe", "suite"],
+    "test": ["it", "test"],
+    "extractWith": "evaluation"
+  }
+}
