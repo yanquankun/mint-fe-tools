@@ -47,6 +47,7 @@ program
   .action(async (name) => {
     if (name.user) {
       const { stdout } = await execa('git', ['config', 'user.name'], {
+        // 运行命令时使用的当前工作目录
         cwd: process.cwd(),
       });
       console.log(chalk.bgGreen.bgCyan('git user:'), stdout);
