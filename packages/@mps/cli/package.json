@@ -49,10 +49,10 @@
     "slash": "^3.0.0",
     "strip-ansi": "^6.0.0",
     "chalk": "^4.1.2",
-    "validate-npm-package-name": "^3.0.0",
-    "yaml-front-matter": "^4.1.0"
+    "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
+    "execa": "^1.0.0",
     "cmd-shim": "^4.1.0"
   },
   "engines": {
