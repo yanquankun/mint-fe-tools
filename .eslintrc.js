@@ -1,4 +1,5 @@
 module.exports = {
+  // 补充node规则 取消console等nodeapi error
   env: {
     browser: true,
     node: true,
