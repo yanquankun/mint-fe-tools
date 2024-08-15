@@ -5,17 +5,17 @@ const inquirer = require('inquirer');
 const version = require('../package.json').version;
 const execa = require('execa');
 
-program
-  .name('mpscli')
-  .description('小程序ci构建工具脚手架')
-  .option('-d, --debug', '是否开启debug模式')
-  .version(version);
+program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
 program
   .command('init')
   .description('初始化mps项目目录，将在你的根目录中进行创建')
   .option('-e, --env <envName>', '设置你的项目环境')
+  .option('-d, --debug', '是否开启初始化mps目录debug模式')
   .action(async (name) => {
+    if (name.debug) {
+      console.log('打开debug模式');
+    }
     const env = name.env || '';
     if (env) {
       console.log(chalk.bgGreen.bgCyan(`当前设置环境是${env}`));
@@ -35,6 +35,7 @@ program
 
 program
   .command('clean')
+  .option('-d, --debug', '是否开启清除mps配置目录debug模式')
   .description('清除mps配置目录')
   .action(() => console.log(chalk.bgGreen.bgCyan('清除mps配置目录')));
 
@@ -64,6 +65,15 @@ program
       });
       console.log(chalk.bgGreen.bgCyan('git remote:'), stdout);
     }
+  });
+
+program
+  .command('build')
+  .option('-d, --debug', '是否开启构建小程序debug模式')
+  .description('构建小程序')
+  .action((name) => {
+    console.log(name);
+    console.log(chalk.bgGreen.bgCyan('构建小程序'));
   });
 
 program.on('command:*', ([cmd]) => {
