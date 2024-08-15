@@ -47,3 +47,4 @@ program.on('--help', () => {
 });
 
 program.parse();
+console.log();
