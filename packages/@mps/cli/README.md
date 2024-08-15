@@ -38,3 +38,7 @@
 - run `mpscli clean` 删除 mpscli 配置目录
 - run `mpscli clean devQr` 清空 mpscli 的本地版小程序二维码目录
 - run `mpscli version` 获取 mpscli 版本
+
+### 原理图
+
+![mps-cli工具流程图](https://www.yanquankun.com:9300/cdn/mpsc/mp-ci.png 'Magic Gardens')
