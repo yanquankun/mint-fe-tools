@@ -46,7 +46,9 @@ program
   .description('获取git信息')
   .action(async (name) => {
     if (name.user) {
-      const { stdout } = await execa('git', ['config', 'user.name'], { cwd: process.cwd() });
+      const { stdout } = await execa('git', ['config', 'user.name'], {
+        cwd: process.cwd(),
+      });
       console.log(chalk.bgGreen.bgCyan('git user:'), stdout);
     }
     if (name.branch) {
