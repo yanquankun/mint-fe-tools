@@ -1,4 +1,5 @@
 module.exports = {
+  // 补充node规则 取消console等nodeapi error
   env: {
     browser: true,
     node: true,
@@ -34,6 +35,7 @@ module.exports = {
     'prefer-const': 'error',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-require-imports': 'off',
+    '@typescript-eslint/no-unused-expressions': 'warn',
     '@typescript-eslint/naming-convention': [
       'error',
       {
