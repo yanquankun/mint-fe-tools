@@ -1,0 +1,5 @@
+{
+  "packages/**/*.{ts,tsx,js,jsx}": ["npm run lint", "npm run prettier-fix"],
+  "*.json": ["prettier --trailing-comma none --write"],
+  "*.md": ["prettier --write"]
+}

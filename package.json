@@ -1,0 +1,39 @@
+{
+  "name": "@lbg-fe-tools/workspaces",
+  "author": {
+    "name": "yanquankun"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "lerna run dev",
+    "build": "lerna run --parallel build",
+    "pretify": "prettier --write .",
+    "prepare": "(husky install 2>/dev/null ||:) && mkdir -p .husky",
+    "postinstall": "husky install",
+    "prettier-lint": "prettier --check packages",
+    "prettier-fix": "prettier --write packages",
+    "lint-fix": "eslint --fix packages/* --ext .js,.ts",
+    "lint": "eslint --ext .js,.ts"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^6.0.0",
+    "lerna": "^8.1.8",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
+    "tsconfig-paths": "3.9.0",
+    "typescript": "3.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yanquankun/mint-fe-tools"
+  },
+  "license": "MIT"
+}

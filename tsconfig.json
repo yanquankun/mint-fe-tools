@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["DOM", "DOM.Iterable", "ES5", "ES6"],
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "strictFunctionTypes": true,
+    "moduleResolution": "node",
+    "types": [],
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "."
+  }
+}
