@@ -14,16 +14,16 @@ program.name('mpscli').description('小程序ci构建工具脚手架').version(v
 program
   .command('init')
   .description('初始化mps项目目录，将在你的根目录中进行创建')
-  .option('-e, --env <envName>', '设置你的项目环境')
+  // .option('-e, --env <envName>', '设置你的项目环境')
   .option('-d, --debug', '是否开启初始化mps目录debug模式')
   .action(async (name) => {
     if (name.debug) {
-      console.log('打开debug模式');
+      _log.info(`当前构建目录：${process.cwd()}`, 'build');
     }
-    const env = name.env || '';
-    if (env) {
-      _log.info(`当前设置环境是${env}`, 'init');
-    }
+    // const env = name.env || '';
+    // if (env) {
+    //   _log.info(`当前设置环境是${env}`, 'init');
+    // }
     const { ok } = await inquirer.prompt([
       {
         name: 'ok',
@@ -35,13 +35,29 @@ program
       process.exit(1);
     }
     _log.info('创建项目开始', 'init');
+    try {
+      const fn = await loadLocalModule('../command/build.js');
+      isFunction(fn) && fn.call(null, generator, Boolean(name.debug));
+    } catch (e) {
+      _log.error(e, 'init');
+    }
   });
 
 program
   .command('clean')
   .option('-d, --debug', '是否开启清除mps配置目录debug模式')
+  .option('-q, --qrcode', '清除本地版二维码目录内容')
+  .option('-s, --self', '清除整个mps构建目录')
   .description('清除mps配置目录')
-  .action(() => console.log(chalk.bgGreen.bgCyan('清除mps配置目录')));
+  .action(async (name) => {
+    _log.info('开始执行清除操作', 'clean');
+    try {
+      const fn = await loadLocalModule('../command/clean.js');
+      isFunction(fn) && fn.call(null, generator, Boolean(name.self), Boolean(name.debug));
+    } catch (e) {
+      _log.error(e, 'clean');
+    }
+  });
 
 program
   .command('git')
@@ -82,10 +98,10 @@ program
 
     _log.info('开始构建小程序', 'build');
     try {
-      const fn = await loadLocalModule('../command/init.js');
+      const fn = await loadLocalModule('../command/build.js');
       isFunction(fn) && fn.call(null, generator, Boolean(name.debug));
     } catch (e) {
-      _log.error(e, 'error');
+      _log.error(e, 'build');
     }
   });
 

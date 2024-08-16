@@ -14,6 +14,7 @@ const Configuration = {
         'chore', // 其他
         'lint', // 工程化修改
         'init', // 工程初始化
+        'add', // 新增
       ],
     ],
   },
