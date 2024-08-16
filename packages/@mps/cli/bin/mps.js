@@ -5,6 +5,8 @@ const inquirer = require('inquirer');
 const version = require('../package.json').version;
 const execa = require('execa');
 const generator = require('../lib/generator');
+const { loadLocalModule } = require('../lib/module');
+const _log = require('../utils/logger');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -19,7 +21,7 @@ program
     }
     const env = name.env || '';
     if (env) {
-      console.log(chalk.bgGreen.bgCyan(`当前设置环境是${env}`));
+      _log.info(`当前设置环境是${env}`, 'init');
     }
     const { ok } = await inquirer.prompt([
       {
@@ -31,7 +33,7 @@ program
     if (!ok) {
       process.exit(1);
     }
-    console.log(chalk.bgGreen.bgCyan('创建项目开始'));
+    _log.info('创建项目开始', 'init');
   });
 
 program
@@ -52,19 +54,19 @@ program
         // 运行命令时使用的当前工作目录
         cwd: process.cwd(),
       });
-      console.log(chalk.bgGreen.bgCyan('git user:'), stdout);
+      _log.info(`${stdout}`, 'git user:');
     }
     if (name.branch) {
       const { stdout } = await execa('git', ['symbolic-ref', '--short', 'HEAD'], {
         cwd: process.cwd(),
       });
-      console.log(chalk.bgGreen.bgCyan('git branch:'), stdout);
+      _log.info(`${stdout}`, 'git branch:');
     }
     if (name.remote) {
       const { stdout } = await execa('git', ['config', 'remote.origin.url'], {
         cwd: process.cwd(),
       });
-      console.log(chalk.bgGreen.bgCyan('git remote:'), stdout);
+      _log.info(`${stdout}`, 'git remote:');
     }
   });
 
@@ -72,24 +74,27 @@ program
   .command('build')
   .option('-d, --debug', '是否开启构建小程序debug模式')
   .description('构建小程序')
-  .action((name) => {
+  .action(async (name) => {
     if (name.debug) {
-      console.log('打开debug模式');
+      _log.log('打开debug模式', 'build');
     }
 
-    // 注册构建模板
-    require('../lib/init.js')(generator);
+    try {
+      await loadLocalModule('/cmd/init.js', process.cwd())(generator, Boolean(name.debug));
+    } catch (e) {
+      _log.error(e, 'error');
+    }
 
-    console.log(chalk.bgGreen.bgCyan('构建小程序'));
+    _log.info('构建小程序', 'build');
   });
 
 program.on('command:*', ([cmd]) => {
-  console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`));
+  _log.error(`Unknown command ${chalk.yellow(cmd)}.`);
 });
 
 program.on('--help', () => {
   console.log();
-  console.log(`  运行 ${chalk.cyan(`mpscli <command> --help`)} 获取指令帮助`);
+  _log.info(` 运行 ${chalk.cyan(`mpscli <command> --help`)} 获取指令帮助`);
   console.log();
 });
 

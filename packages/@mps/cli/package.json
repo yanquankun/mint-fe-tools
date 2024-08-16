@@ -39,7 +39,8 @@
     "pkg-dir": "^5.0.0",
     "resolve": "^1.20.0",
     "strip-ansi": "^6.0.0",
-    "validate-npm-package-name": "^3.0.0"
+    "validate-npm-package-name": "^3.0.0",
+    "ora": "^5.3.0"
   },
   "devDependencies": {
     "cmd-shim": "^4.1.0",
