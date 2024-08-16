@@ -83,9 +83,9 @@ exports.loadModule = function (request, context, force = false) {
   }
 };
 
-exports.loadLocalModule = function (request, context) {
+exports.loadLocalModule = function (request) {
   try {
-    return require(path.relative(context, request));
+    return require(path.relative(process.cwd(), request));
   } catch (e) {
     _log.error(e, request);
   }
