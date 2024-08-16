@@ -7,6 +7,7 @@ const execa = require('execa');
 const generator = require('../lib/generator');
 const { loadLocalModule } = require('../lib/module');
 const _log = require('../utils/logger');
+const { isFunction } = require('../utils/type');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -79,13 +80,13 @@ program
       _log.log('打开debug模式', 'build');
     }
 
+    _log.info('开始构建小程序', 'build');
     try {
-      await loadLocalModule('/cmd/init.js', process.cwd())(generator, Boolean(name.debug));
+      const fn = await loadLocalModule('../cmd/init.js', process.cwd());
+      isFunction(fn) && fn.call(null, generator, Boolean(name.debug));
     } catch (e) {
       _log.error(e, 'error');
     }
-
-    _log.info('构建小程序', 'build');
   });
 
 program.on('command:*', ([cmd]) => {

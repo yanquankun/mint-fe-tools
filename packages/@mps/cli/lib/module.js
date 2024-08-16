@@ -85,7 +85,7 @@ exports.loadModule = function (request, context, force = false) {
 
 exports.loadLocalModule = function (request, context) {
   try {
-    return require(path.join(context, request));
+    return require(path.relative(context, request));
   } catch (e) {
     _log.error(e, request);
   }
