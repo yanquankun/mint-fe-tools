@@ -82,7 +82,7 @@ program
 
     _log.info('开始构建小程序', 'build');
     try {
-      const fn = await loadLocalModule('../cmd/init.js');
+      const fn = await loadLocalModule('../command/init.js');
       isFunction(fn) && fn.call(null, generator, Boolean(name.debug));
     } catch (e) {
       _log.error(e, 'error');
