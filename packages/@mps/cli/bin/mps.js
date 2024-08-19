@@ -16,7 +16,10 @@ program
   .description('初始化mps项目目录，将在你的根目录中进行创建，请在你的项目根目录中安装')
   // .option('-e, --env <envName>', '设置你的项目环境')
   .option('-d, --debug', '是否开启初始化mps目录debug模式')
-  .option('-f, --force <path>', '是否强制在当前目录初始化cli结构，强制会直接在当前目录安装')
+  .option(
+    '-f, --force <path>',
+    '是否强制在当前目录初始化cli结构，强制会直接在当前目录安装。有可能你的项目是monorepo结构，虽然你可以给每个子包都安装mpscli，但建议只维护一个mpscli配置目录',
+  )
   .action(async (name) => {
     // const env = name.env || '';
     // if (env) {
