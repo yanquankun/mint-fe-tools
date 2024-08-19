@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const program = require('commander');
 const chalk = require('chalk');
-const inquirer = require('inquirer');
+// const inquirer = require('inquirer');
 const version = require('../package.json').version;
 const execa = require('execa');
 const generator = require('../lib/generator');
@@ -13,31 +13,33 @@ program.name('mpscli').description('小程序ci构建工具脚手架').version(v
 
 program
   .command('init')
-  .description('初始化mps项目目录，将在你的根目录中进行创建')
+  .description('初始化mps项目目录，将在你的根目录中进行创建，请在你的项目根目录中安装')
   // .option('-e, --env <envName>', '设置你的项目环境')
   .option('-d, --debug', '是否开启初始化mps目录debug模式')
+  .option('-f, --force <path>', '是否强制在当前目录初始化cli结构，强制会直接在当前目录安装')
   .action(async (name) => {
-    if (name.debug) {
-      _log.info(`当前构建目录：${process.cwd()}`, 'build');
-    }
     // const env = name.env || '';
     // if (env) {
     //   _log.info(`当前设置环境是${env}`, 'init');
     // }
-    const { ok } = await inquirer.prompt([
-      {
-        name: 'ok',
-        type: 'confirm',
-        message: `Generate project in current directory?`,
-      },
-    ]);
-    if (!ok) {
-      process.exit(1);
-    }
+    // const { ok } = await inquirer.prompt([
+    //   {
+    //     name: 'ok',
+    //     type: 'confirm',
+    //     message: `Generate project in current directory?`,
+    //   },
+    // ]);
+    // if (!ok) {
+    //   process.exit(1);
+    // }
     _log.info('创建项目开始', 'init');
     try {
-      const fn = await loadLocalModule('../command/build.js');
-      isFunction(fn) && fn.call(null, generator, Boolean(name.debug));
+      const fn = await loadLocalModule('../command/init.js');
+      isFunction(fn) &&
+        fn.call(null, generator, {
+          path: name.path,
+          force: name.force,
+        });
     } catch (e) {
       _log.error(e, 'init');
     }
@@ -53,7 +55,8 @@ program
     _log.info('开始执行清除操作', 'clean');
     try {
       const fn = await loadLocalModule('../command/clean.js');
-      isFunction(fn) && fn.call(null, generator, Boolean(name.self), Boolean(name.debug));
+      isFunction(fn) &&
+        fn.call(null, generator, { isCleanSelf: Boolean(name.self), isDebug: Boolean(name.debug) });
     } catch (e) {
       _log.error(e, 'clean');
     }
@@ -112,6 +115,7 @@ program.on('command:*', ([cmd]) => {
 program.on('--help', () => {
   console.log();
   _log.info(` 运行 ${chalk.cyan(`mpscli <command> --help`)} 获取指令帮助`);
+  _log.info(` ${chalk.red(`所有指令请在与.mps同级目录进行操作`)} `);
   console.log();
 });
 

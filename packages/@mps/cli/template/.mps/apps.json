@@ -1,0 +1,6 @@
+{
+  "weapps": [],
+  "branchs": ["master"],
+  "manager": "npm",
+  "command": "build:weapp"
+}
