@@ -70,6 +70,7 @@ program
   .option('-u, --user', '获取git用户信息')
   .option('-b, --branch', '获取git分支名')
   .option('-r, --remote', '获取git远程仓库地址')
+  .option('-c, --commit', '获取git最新提交记录')
   .description('获取git信息')
   .action(async (name) => {
     if (name.user) {
@@ -90,6 +91,22 @@ program
         cwd: process.cwd(),
       });
       _log.info(`${stdout}`, 'git remote:');
+    }
+    if (name.commit) {
+      const { stdout: author } = await execa('git', ['log', '-1', '--pretty=format:%cn'], {
+        cwd: process.cwd(),
+      });
+      const { stdout: date } = await execa(
+        'git',
+        ['log', '-1', '--pretty=format:%ad', '--date=format:%Y-%m-%d_%H:%M:%S'],
+        {
+          cwd: process.cwd(),
+        },
+      );
+      const { stdout: commit } = await execa('git', ['log', '-1', '--pretty=format:%s'], {
+        cwd: process.cwd(),
+      });
+      _log.info(`${author}-${date}-${commit.trim()}`.replace(/\s/g, ''), 'git commit:');
     }
   });
 
