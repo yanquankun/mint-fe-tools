@@ -6,15 +6,15 @@ const Configuration = {
       2,
       'always',
       [
-        'build', // 构建变更
-        'feat', // 新功能
-        'fix', // 修复
-        'docs', // 文档
+        'build',  // 构建变更
+        'feat',   // 新功能
+        'fix',    // 修复
+        'docs',   // 文档
         'update', // 更新
-        'chore', // 其他
-        'lint', // 工程化修改
-        'init', // 工程初始化
-        'add', // 新增
+        'chore',  // 其他
+        'lint',   // 工程化修改
+        'init',   // 工程初始化
+        'add',    // 新增
       ],
     ],
   },
