@@ -6,7 +6,7 @@ const cwd = process.cwd();
 
 module.exports = async (generator, { isCleanSelf = false, isDebug = false }) => {
   const path = isCleanSelf ? `${cwd}/.mps` : `${cwd}/.mps/previewQrCode`;
-  console.log(path);
+
   if (!file.isExitDir(path)) {
     _log.warn(
       `不存在 ${_log.chalk.red(
