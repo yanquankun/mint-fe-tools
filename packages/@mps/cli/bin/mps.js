@@ -1,7 +1,5 @@
 #!/usr/bin/env node
-const program = require('commander');
-const chalk = require('chalk');
-// const inquirer = require('inquirer');
+const program = require('commander'); // const inquirer = require('inquirer');
 const version = require('../package.json').version;
 const execa = require('execa');
 const generator = require('../lib/generator');
@@ -129,13 +127,13 @@ program
   });
 
 program.on('command:*', ([cmd]) => {
-  _log.error(`Unknown command ${chalk.yellow(cmd)}.`);
+  _log.error(`Unknown command ${_log.chalk.yellow(cmd)}.`);
 });
 
 program.on('--help', () => {
   console.log();
-  _log.info(` 运行 ${chalk.cyan(`mpscli <command> --help`)} 获取指令帮助`);
-  _log.info(` ${chalk.red(`所有指令请在与.mps同级目录进行操作`)} `);
+  _log.info(` 运行 ${_log.chalk.cyan(`mpscli <command> --help`)} 获取指令帮助`);
+  _log.info(` ${_log.chalk.red(`所有指令请在与.mps同级目录进行操作`)} `);
   console.log();
 });
 

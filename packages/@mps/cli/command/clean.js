@@ -1,9 +1,22 @@
 const execa = require('execa');
 const _log = require('../utils/logger');
 const inquirer = require('inquirer');
-
+const file = require('../utils/file');
 const cwd = process.cwd();
+
 module.exports = async (generator, { isCleanSelf = false, isDebug = false }) => {
+  const path = isCleanSelf ? `${cwd}/.mps` : `${cwd}/.mps/previewQrCode`;
+  console.log(path);
+  if (!file.isExitDir(path)) {
+    _log.warn(
+      `不存在 ${_log.chalk.red(
+        isCleanSelf ? '.mps' : 'previewQrCode',
+      )} 文件夹，请确认该目录是否存在`,
+      'clean',
+    );
+    return;
+  }
+
   try {
     if (isCleanSelf) {
       const { ok } = await inquirer.prompt([
@@ -19,7 +32,7 @@ module.exports = async (generator, { isCleanSelf = false, isDebug = false }) => 
     }
 
     try {
-      execa.sync(isCleanSelf ? `rm -rf ${cwd}/.mps` : `rm -rf ${cwd}/.mps/previewQrCode/*`, {
+      execa.sync(`rm -rf ${isCleanSelf ? path : path + '/*'}`, {
         shell: true,
         stdio: 'inherit',
       });

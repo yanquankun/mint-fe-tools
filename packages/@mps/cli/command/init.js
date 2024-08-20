@@ -1,6 +1,5 @@
 const { isMpProject } = require('../tools/getProjectJson');
 const _log = require('../utils/logger');
-const chalk = require('chalk');
 const cwd = process.cwd();
 
 module.exports = (generator, { isDebug = false, force = false }) => {
@@ -8,7 +7,7 @@ module.exports = (generator, { isDebug = false, force = false }) => {
   const isMp = isMpProject(force, isDebug);
   if (!force && !isMp) {
     _log.error(
-      '当前目录' + chalk.yellow(cwd) + '不是小程序根项目，请在小程序根目录中执行mps init',
+      '当前目录' + _log.chalk.yellow(cwd) + '不是小程序根项目，请在小程序根目录中执行mps init',
       'Init',
     );
     process.exit(1);
