@@ -11,7 +11,7 @@ program.name('mpscli').description('小程序ci构建工具脚手架').version(v
 
 program
   .command('init')
-  .description('初始化mps项目目录，将在你的根目录中进行创建，请在你的项目根目录中安装')
+  .description('初始化mps项目目录，将在你的根目录中进行创建，请在你的小程序项目根目录中安装')
   // .option('-e, --env <envName>', '设置你的项目环境')
   .option('-d, --debug', '是否开启初始化mps目录debug模式')
   .option(
