@@ -2,8 +2,6 @@ const fs = require('fs');
 const _log = require('./logger');
 
 /**
- * 2024-08-20 18:27:23
- * @author Mint.Yan
  * @description 根据路径判断文件是否存在
  * @param { String } path 文件路径
  * @return { Boolean }
@@ -21,8 +19,6 @@ const isExitFile = (path, isDebug = false) => {
 };
 
 /**
- * 2024-08-20 18:32:47
- * @author Mint.Yan
  * @description 根据路径判断文件夹是否存在
  * @param { String } path 目录路径
  * @return { Boolean }
