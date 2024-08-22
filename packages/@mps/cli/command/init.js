@@ -1,8 +1,9 @@
 const { isMpProject, getProjectPackageManage } = require('../tools/getProjectJson');
 const _log = require('../utils/logger');
 const cwd = process.cwd();
-const { writeFileTree, isExitDir } = require('../utils/file');
+const { writeFileTree, isExitDir, root } = require('../utils/file');
 const inquirer = require('inquirer');
+const { loadModule } = require('../lib/module');
 
 const render = async (generator, ejsOptions, isDebug) => {
   const templateFiles = await generator.render('/template', ejsOptions, isDebug);
@@ -17,6 +18,11 @@ module.exports = async (generator, { isDebug = false, force = false, lbg = false
       'Init',
     );
     process.exit(1);
+  }
+
+  if (lbg) {
+    const res = await loadModule('@mps/cli-lbg', root);
+    console.log(res);
   }
 
   const packageManage = getProjectPackageManage();

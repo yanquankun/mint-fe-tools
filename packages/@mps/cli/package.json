@@ -40,12 +40,11 @@
     "isbinaryfile": "^4.0.6",
     "javascript-stringify": "^2.0.1",
     "minimist": "^1.2.5",
+    "ora": "^5.3.0",
     "pkg-dir": "^5.0.0",
     "resolve": "^1.20.0",
     "strip-ansi": "^6.0.0",
-    "validate-npm-package-name": "^3.0.0",
-    "ora": "^5.3.0",
-    "@mps/cli-lbg": "git+https://github.com/yanquankun/mint-fe-tools/tree/feature/mps-cli/packages/@mps/cli-lbg"
+    "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
     "cmd-shim": "^4.1.0",
