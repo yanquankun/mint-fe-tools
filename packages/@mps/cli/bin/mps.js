@@ -23,16 +23,6 @@ program
     // if (env) {
     //   _log.info(`当前设置环境是${env}`, 'init');
     // }
-    // const { ok } = await inquirer.prompt([
-    //   {
-    //     name: 'ok',
-    //     type: 'confirm',
-    //     message: `Generate project in current directory?`,
-    //   },
-    // ]);
-    // if (!ok) {
-    //   process.exit(1);
-    // }
     _log.info('创建项目开始', 'init');
     try {
       const fn = await loadLocalModule('../command/init.js');
