@@ -14,7 +14,10 @@ module.exports = {
   },
   render: async (absoluteDir, ejsOptions, isDebug = false) => {
     const templatePath = getPathAbsoluteRoot(absoluteDir);
-    const files = await globby(['**/*'], { cwd: templatePath, dot: true });
+    const files = await globby(['**/*'], {
+      cwd: templatePath,
+      dot: true,
+    });
     isDebug && _log.info(`获取所有模板文件：${files}`, 'render');
     files.forEach((rawPath) => {
       const targetPath = rawPath

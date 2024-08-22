@@ -8,7 +8,6 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   ignorePatterns: [
     '.nx/',
-    '.yarn/',
     '**/jest.config.js',
     '**/node_modules/**',
     '**/dist/**',
@@ -19,7 +18,8 @@ module.exports = {
     '**/build/**',
     '.nx/*',
     '.yarn/*',
-    'packages/@mps/cli-lbg/templates/**'
+    'packages/@mps/cli/template/**',
+    'packages/@mps/cli-lbg/templates/**',
   ],
   rules: {
     indent: [

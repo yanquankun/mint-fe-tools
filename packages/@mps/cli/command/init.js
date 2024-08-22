@@ -4,6 +4,7 @@ const cwd = process.cwd();
 const { writeFileTree, isExitDir, root } = require('../utils/file');
 const inquirer = require('inquirer');
 const { loadModule } = require('../lib/module');
+const { isFunction } = require('../utils/type');
 
 const render = async (generator, ejsOptions, isDebug) => {
   const templateFiles = await generator.render('/template', ejsOptions, isDebug);
@@ -20,9 +21,11 @@ module.exports = async (generator, { isDebug = false, force = false, lbg = false
     process.exit(1);
   }
 
+  let lbgNoticeTaskTemp = '';
   if (lbg) {
-    const res = await loadModule('@mps/cli-lbg', root);
-    console.log(res);
+    const { lbg: lbgModule } = await loadModule('@mps/cli-lbg', root);
+    isFunction(lbgModule.getLbgNoticeTaskTemp) &&
+      (lbgNoticeTaskTemp = lbgModule.getLbgNoticeTaskTemp(root + '/node_modules/@mps/cli-lbg'));
   }
 
   const packageManage = getProjectPackageManage();
@@ -46,7 +49,7 @@ module.exports = async (generator, { isDebug = false, force = false, lbg = false
     generator,
     {
       packageManage,
-      lbg,
+      lbgNoticeTaskTemp,
     },
     isDebug,
   );
