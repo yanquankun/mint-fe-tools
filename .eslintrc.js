@@ -19,6 +19,7 @@ module.exports = {
     '**/build/**',
     '.nx/*',
     '.yarn/*',
+    'packages/@mps/cli-lbg/templates/**'
   ],
   rules: {
     indent: [

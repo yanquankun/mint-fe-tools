@@ -1,11 +1,8 @@
 {
-  "name": "@mps/cli-lgb",
+  "name": "@mps/cli-lbg",
   "version": "0.0.1",
   "description": "为mps-cli提供 lgb 专用部分",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "mps",
     "cli",

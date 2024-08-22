@@ -44,7 +44,8 @@
     "resolve": "^1.20.0",
     "strip-ansi": "^6.0.0",
     "validate-npm-package-name": "^3.0.0",
-    "ora": "^5.3.0"
+    "ora": "^5.3.0",
+    "@mps/cli-lbg": "git+https://github.com/yanquankun/mint-fe-tools/tree/feature/mps-cli/packages/@mps/cli-lbg"
   },
   "devDependencies": {
     "cmd-shim": "^4.1.0",
