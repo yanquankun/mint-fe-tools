@@ -1,6 +1,13 @@
 {
-  "weapps": [],
+  "weapps": [
+    {
+      "appName": "小程序名称",
+      "appId": "小程序id",
+      "key": "小程序key，没有可不填",
+      "prePagePath": "小程序默认启动路径，不填则以微信规则为主"
+    }
+  ],
   "branchs": ["master"],
-  "manager": "npm",
+  "manager": "<%= packageManage %>",
   "command": "build:weapp"
 }

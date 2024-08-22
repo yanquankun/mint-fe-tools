@@ -1,0 +1,25 @@
+{
+  "name": "@mps/cli-lgb",
+  "version": "0.0.1",
+  "description": "为mps-cli提供 lgb 专用部分",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mps",
+    "cli",
+    "lbg"
+  ],
+  "author": "yanquankun",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yanquankun/mint-fe-tools",
+    "directory": "packages/@mps/cli-lbg"
+  },
+  "bugs": {
+    "url": "https://github.com/yanquankun/mint-fe-tools/issues"
+  },
+  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mps/cli-lbg/README.md"
+}

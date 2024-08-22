@@ -11,6 +11,10 @@
     "url": "https://github.com/yanquankun/mint-fe-tools",
     "directory": "packages/@mps/cli"
   },
+  "bugs": {
+    "url": "https://github.com/yanquankun/mint-fe-tools/issues"
+  },
+  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mps/cli/README.md",
   "keywords": [
     "mps",
     "cli"

@@ -3,6 +3,7 @@ const { getPathAbsoluteRoot } = require('../utils/file');
 const fs = require('fs-extra');
 const path = require('path');
 const _log = require('../utils/logger');
+const ejs = require('ejs');
 
 module.exports = {
   injectImports: (file, imports) => {
@@ -11,11 +12,10 @@ module.exports = {
       _imports.add(imp);
     });
   },
-  render: async (absoluteDir, isDebug = false) => {
+  render: async (absoluteDir, ejsOptions, isDebug = false) => {
     const templatePath = getPathAbsoluteRoot(absoluteDir);
     const files = await globby(['**/*'], { cwd: templatePath, dot: true });
     isDebug && _log.info(`获取所有模板文件：${files}`, 'render');
-
     files.forEach((rawPath) => {
       const targetPath = rawPath
         .split('/')
@@ -31,10 +31,12 @@ module.exports = {
           return filename;
         })
         .join('/');
+
       const filePath = path.join(templatePath, targetPath);
       const content = fs.readFileSync(filePath, 'utf-8');
-      if (Buffer.isBuffer(content) || /[^\s]/.test(content)) {
-        files[targetPath] = content;
+      const renderContent = ejs.render(content, ejsOptions);
+      if (Buffer.isBuffer(renderContent) || /[^\s]/.test(renderContent)) {
+        files[targetPath] = renderContent;
       }
     });
     return files;

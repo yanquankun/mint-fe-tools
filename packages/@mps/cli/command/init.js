@@ -1,15 +1,15 @@
-const { isMpProject } = require('../tools/getProjectJson');
+const { isMpProject, getProjectPackageManage } = require('../tools/getProjectJson');
 const _log = require('../utils/logger');
 const cwd = process.cwd();
 const { writeFileTree, isExitDir } = require('../utils/file');
 const inquirer = require('inquirer');
 
-const render = async (generator, isDebug) => {
-  const templateFiles = await generator.render('/template', isDebug);
+const render = async (generator, ejsOptions, isDebug) => {
+  const templateFiles = await generator.render('/template', ejsOptions, isDebug);
   writeFileTree(cwd, templateFiles);
 };
 
-module.exports = async (generator, { isDebug = false, force = false }) => {
+module.exports = async (generator, { isDebug = false, force = false, lbg = false }) => {
   const isMp = isMpProject(force, isDebug);
   if (!force && !isMp) {
     _log.error(
@@ -18,6 +18,8 @@ module.exports = async (generator, { isDebug = false, force = false }) => {
     );
     process.exit(1);
   }
+
+  const packageManage = getProjectPackageManage();
 
   if (isExitDir('.mps', isDebug)) {
     const { ok } = await inquirer.prompt([
@@ -34,5 +36,12 @@ module.exports = async (generator, { isDebug = false, force = false }) => {
     }
   }
 
-  render(generator, isDebug);
+  render(
+    generator,
+    {
+      packageManage,
+      lbg,
+    },
+    isDebug,
+  );
 };

@@ -18,6 +18,7 @@ program
     '-f, --force <path>',
     '是否强制在当前目录初始化cli结构，强制会直接在当前目录安装。有可能你的项目是monorepo结构，虽然你可以给每个子包都安装mpscli，但建议只维护一个mpscli配置目录',
   )
+  .option('-l, --lbg', '是否使用lbg插件')
   .action(async (name) => {
     // const env = name.env || '';
     // if (env) {
@@ -30,6 +31,7 @@ program
         fn.call(null, generator, {
           path: name.path,
           force: name.force,
+          lbg: name.lbg,
         });
     } catch (e) {
       _log.error(e, 'init');

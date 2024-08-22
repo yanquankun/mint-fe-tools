@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const _log = require('../utils/logger');
+const { isExitFile } = require('../utils/file');
 
 exports.isMpProject = (isDebug = false) => {
   try {
@@ -26,4 +27,18 @@ exports.getMpPrejectJson = (dir = '', isDebug = false) => {
     isDebug && _log.error(error, 'getMpPrejectJson');
     return {};
   }
+};
+
+exports.getProjectPackageManage = () => {
+  const context = process.cwd();
+  if (isExitFile(path.join(context, 'package.json'))) {
+    return 'npm';
+  }
+  if (isExitFile(path.join(context, 'yarn.lock'))) {
+    return 'yarn';
+  }
+  if (isExitFile(path.join(context, 'pnpm-lock.yaml'))) {
+    return 'pnpm';
+  }
+  return 'npm';
 };
