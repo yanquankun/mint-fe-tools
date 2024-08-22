@@ -1,6 +1,5 @@
-export = file;
 export as namespace file;
-declare namespace file {
+export declare namespace file {
   function isExitFile(dir: string, isDebug?: boolean): boolean;
   function isExitDir(dir: string, isDebug?: boolean): boolean;
   function writeFileTree(dir: string, files: any): void;
