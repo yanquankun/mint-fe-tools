@@ -63,8 +63,6 @@ const writeFileTree = async (dir, files) => {
     fs.ensureDirSync(path.dirname(filePath));
     fs.writeFileSync(filePath, files[name] || '');
   });
-
-  _log.done('.mps目录创建成功', 'writeFileTree');
 };
 
 /**

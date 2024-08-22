@@ -5,10 +5,13 @@ const { writeFileTree, isExitDir, root } = require('../utils/file');
 const inquirer = require('inquirer');
 const { loadModule } = require('../lib/module');
 const { isFunction } = require('../utils/type');
+const cliLbgPath = `${root}/node_modules/@mps/cli-lbg`;
 
 const render = async (generator, ejsOptions, isDebug) => {
   const templateFiles = await generator.render('/template', ejsOptions, isDebug);
   writeFileTree(cwd, templateFiles);
+
+  _log.done('.mps目录创建成功', 'writeFileTree');
 };
 
 module.exports = async (generator, { isDebug = false, force = false, lbg = false }) => {
@@ -20,15 +23,6 @@ module.exports = async (generator, { isDebug = false, force = false, lbg = false
     );
     process.exit(1);
   }
-
-  let lbgNoticeTaskTemp = '';
-  if (lbg) {
-    const { lbg: lbgModule } = await loadModule('@mps/cli-lbg', root);
-    isFunction(lbgModule.getLbgNoticeTaskTemp) &&
-      (lbgNoticeTaskTemp = lbgModule.getLbgNoticeTaskTemp(root + '/node_modules/@mps/cli-lbg'));
-  }
-
-  const packageManage = getProjectPackageManage();
 
   if (isExitDir('.mps', isDebug)) {
     const { ok } = await inquirer.prompt([
@@ -44,6 +38,27 @@ module.exports = async (generator, { isDebug = false, force = false, lbg = false
       process.exit(1);
     }
   }
+
+  // 获取lbg 通知模板
+  let lbgNoticeTaskTemp = '';
+  if (lbg) {
+    try {
+      const { lbg: lbgModule } = await loadModule('@mps/cli-lbg', root);
+      isFunction(lbgModule.getLbgNoticeTaskTemp) &&
+        (lbgNoticeTaskTemp = lbgModule.getLbgNoticeTaskTemp(cliLbgPath));
+    } catch (err) {
+      if (isDebug) {
+        console.log('');
+        _log.error(err, 'init');
+        console.log('');
+        _log.error('.mps目录创建失败', 'getLbgNoticeTaskTemp');
+      }
+      return;
+    }
+  }
+
+  // 获取包管理工具
+  const packageManage = getProjectPackageManage();
 
   render(
     generator,

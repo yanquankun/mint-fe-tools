@@ -9,7 +9,6 @@ function resolveFallback(request, options) {
   const paths = [];
   for (let i = 0; i < options.paths.length; i++) {
     const p = options.paths[i];
-    console.log(123, p);
     fakeParent.paths = Module._nodeModulePaths(p);
     const lookupPaths = Module._resolveLookupPaths(request, fakeParent, true);
 
