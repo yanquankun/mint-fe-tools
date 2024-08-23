@@ -66,8 +66,6 @@ const writeFileTree = async (dir, files) => {
 };
 
 /**
- * 2024-08-21 20:09:57
- * @author Mint.Yan
  * @description 获取路径相对cli根目录的绝对路径
  * @param { string } relativeRootDir 相对cli根目录的路径
  * @return { string }
