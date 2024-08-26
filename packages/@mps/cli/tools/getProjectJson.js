@@ -29,6 +29,17 @@ exports.getMpPrejectJson = (dir = '', isDebug = false) => {
   }
 };
 
+exports.getProjectPackage = (isDebug = false) => {
+  try {
+    const context = path.join(process.cwd(), 'package.json');
+    const package = fs.readFileSync(context, 'utf-8');
+    return JSON.parse(package);
+  } catch (error) {
+    isDebug && _log.error(error, 'getProjectPackage');
+    return {};
+  }
+};
+
 exports.getProjectPackageManage = () => {
   const context = process.cwd();
   if (isExitFile(path.join(context, 'package.json'))) {
@@ -41,4 +52,15 @@ exports.getProjectPackageManage = () => {
     return 'pnpm';
   }
   return 'npm';
+};
+
+exports.getMpsAppJson = (isDebug = false) => {
+  try {
+    const context = path.join(process.cwd(), '.mps/apps.json');
+    const package = fs.readFileSync(context, 'utf-8');
+    return JSON.parse(package);
+  } catch (error) {
+    isDebug && _log.error(error, 'getProjectPackage');
+    return {};
+  }
 };

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 const program = require('commander'); // const inquirer = require('inquirer');
 const version = require('../package.json').version;
-const execa = require('execa');
 const generator = require('../lib/generator');
 const { loadLocalModule } = require('../lib/module');
 const _log = require('../utils/logger');
 const { isFunction } = require('../utils/type');
+const git = require('../tools/git');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -64,39 +64,20 @@ program
   .description('获取git信息')
   .action(async (name) => {
     if (name.user) {
-      const { stdout } = await execa('git', ['config', 'user.name'], {
-        // 运行命令时使用的当前工作目录
-        cwd: process.cwd(),
-      });
+      const stdout = await git.getUser();
       _log.info(`${stdout}`, 'git user:');
     }
     if (name.branch) {
-      const { stdout } = await execa('git', ['symbolic-ref', '--short', 'HEAD'], {
-        cwd: process.cwd(),
-      });
+      const stdout = await git.getBranch();
       _log.info(`${stdout}`, 'git branch:');
     }
     if (name.remote) {
-      const { stdout } = await execa('git', ['config', 'remote.origin.url'], {
-        cwd: process.cwd(),
-      });
+      const stdout = await git.getRemote();
       _log.info(`${stdout}`, 'git remote:');
     }
     if (name.commit) {
-      const { stdout: author } = await execa('git', ['log', '-1', '--pretty=format:%cn'], {
-        cwd: process.cwd(),
-      });
-      const { stdout: date } = await execa(
-        'git',
-        ['log', '-1', '--pretty=format:%ad', '--date=format:%Y-%m-%d_%H:%M:%S'],
-        {
-          cwd: process.cwd(),
-        },
-      );
-      const { stdout: commit } = await execa('git', ['log', '-1', '--pretty=format:%s'], {
-        cwd: process.cwd(),
-      });
-      _log.info(`${author}-${date}-${commit.trim()}`.replace(/\s/g, ''), 'git commit:');
+      const stdout = await git.getCommit();
+      _log.info(`${stdout}`);
     }
   });
 
