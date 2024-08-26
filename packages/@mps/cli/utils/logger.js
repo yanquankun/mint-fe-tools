@@ -32,6 +32,7 @@ const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `);
 
 module.exports = {
   chalk,
+  chalkTag,
   log: (msg = '', tag = null) => {
     tag ? console.log(format(chalkTag(tag), msg)) : console.log(msg);
     _log('log', tag, msg);

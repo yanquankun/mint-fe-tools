@@ -36,7 +36,7 @@ module.exports = {
     'prefer-const': 'error',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-require-imports': 'off',
-    '@typescript-eslint/no-unused-expressions': 'warn',
+    '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/naming-convention': [
       'error',
       {
