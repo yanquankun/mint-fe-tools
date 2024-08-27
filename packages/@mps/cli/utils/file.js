@@ -78,7 +78,7 @@ const getPathAbsoluteRoot = (relativeRootDir) => {
  * @description 将base64转换为图片
  * @param {*} base64 图片base64
  */
-export function base64ToImg(base64) {
+const base64ToImg = (base64) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = 'data:image/jpeg;base64,' + base64;
@@ -89,13 +89,13 @@ export function base64ToImg(base64) {
       reject(e);
     };
   });
-}
+};
 
 /**
  * @description 将图片转换为base64
  * @param {*} image
  */
-export function imgToBase64(image) {
+const imgToBase64 = (image) => {
   const canvas = document.createElement('canvas');
   canvas.width = image.width;
   canvas.height = image.height;
@@ -103,7 +103,7 @@ export function imgToBase64(image) {
   ctx.drawImage(canvas, 0, 0, image.width, image.height);
   const dataURL = canvas.toDataURL('image/png');
   return dataURL;
-}
+};
 
 module.exports = {
   isExitFile,
@@ -112,4 +112,6 @@ module.exports = {
   getPathAbsoluteRoot,
   root,
   curDir,
+  base64ToImg,
+  imgToBase64,
 };

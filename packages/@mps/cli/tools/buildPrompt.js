@@ -4,10 +4,11 @@ const _log = require('../utils/logger');
 const { getProjectPackage, getMpsAppJson } = require('./getProjectJson');
 const git = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
+const buildMp = require('./buildMp');
 
 const buildMpPrompt = async () => {
   // 需要对外暴露的参数
-  const output = {
+  const answer = {
     // 版本描述
     desc: '',
     // 版本号
@@ -56,9 +57,9 @@ const buildMpPrompt = async () => {
       message: _log.chalk.bgBlue('请选择是否为发布版本'),
     },
   ]).then((answers) => {
-    output.desc = answers.desc;
-    output.version = answers.version;
-    output.groupNotice = answers.groupNotice;
+    answer.desc = answers.desc;
+    answer.version = answers.version;
+    answer.groupNotice = answers.groupNotice;
     return answers;
   });
 
@@ -89,9 +90,10 @@ const buildMpPrompt = async () => {
         message: _log.chalk.bgBlue('是否打tag'),
       },
     ]);
-    output.isCreateTag = isCreateTag;
+    answer.isCreateTag = isCreateTag;
 
     // 开始构建流程
+    buildMp(answer);
   }
 
   // 本地版本流水线
@@ -105,10 +107,10 @@ const buildMpPrompt = async () => {
       type: 'rawlist',
       message: _log.chalk.bgBlue('是否生成本地版二维码'),
     });
-    output.isCreateQrcode = isCreateQrcode;
+    answer.isCreateQrcode = isCreateQrcode;
 
-    isCreateQrcode &&
-      (await prompt({
+    if (isCreateQrcode) {
+      await prompt({
         name: 'isAtuoUpdateQrcode',
         choices: [
           { name: '是', value: true },
@@ -119,20 +121,24 @@ const buildMpPrompt = async () => {
       }).then((res) => {
         const { isAtuoUpdateQrcode } = res;
         if (isAtuoUpdateQrcode) {
-          output.isAtuoUpdateQrcode = true;
+          answer.isAtuoUpdateQrcode = true;
           _log.info('注册自动更新逻辑', 'buildMpPrompt');
-          setInterval(() => {
-            console.log('注册自动更新逻辑');
-          }, 5 * 1000);
+          let count = 5;
+          const autoUpdate = function () {
+            count-- > 0 &&
+              setTimeout(() => {
+                autoUpdate();
+                buildMp(answer);
+              }, 25 * 60 * 1000);
+          };
+          autoUpdate();
         }
-        // 开始构建流程
-        return;
-      }));
+      });
+    }
 
     // 开始构建流程
+    buildMp(answer);
   }
-
-  return output;
 };
 
 module.exports = buildMpPrompt;
