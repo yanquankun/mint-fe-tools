@@ -3,8 +3,9 @@ const prompt = inquirer.prompt;
 const _log = require('../utils/logger');
 const { getProjectPackage, getMpsAppJson } = require('./getProjectJson');
 const git = require('./git');
+const isDebug = globalThis['buildDebug'] || false;
 
-const buildMpPrompt = async (isDebug = false) => {
+const buildMpPrompt = async () => {
   // 需要对外暴露的参数
   const output = {
     // 版本描述
