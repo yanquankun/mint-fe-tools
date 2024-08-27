@@ -59,8 +59,11 @@ exports.getProjectPackageManage = () => {
 exports.getMpsAppJson = (isDebug = false) => {
   try {
     const context = path.join(process.cwd(), '.mps/apps.json');
-    const package = fs.readFileSync(context, 'utf-8');
-    return JSON.parse(package);
+    const package = require(context);
+    // const context = path.join(process.cwd(), '.mps/apps.json');
+    // const package = fs.readFileSync(context, 'utf-8');
+    // return JSON.parse(package);
+    return package;
   } catch (error) {
     isDebug && _log.error(error, 'getProjectPackage');
     return {};

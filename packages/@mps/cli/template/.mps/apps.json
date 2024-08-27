@@ -7,6 +7,7 @@
       "prePagePath": "小程序默认启动路径，不填则以微信规则为主"
     }
   ],
+  "projectPath":"dist",
   "branchs": ["master"],
   "manager": "<%= packageManage %>",
   "command": "build:weapp"

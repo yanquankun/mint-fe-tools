@@ -15,9 +15,11 @@ const buildMpPrompt = async () => {
     version: '',
     // 是否配置群通知
     groupNotice: false,
+    // 是否为发布版本
+    isProd: false,
     // 是否生成本地版二维码
     isCreateQrcode: false,
-    // 是否注册自动登录
+    // 是否注册自动更新预览版二维码
     isAtuoUpdateQrcode: false,
     // 是否打tag
     isCreateTag: false,
@@ -28,7 +30,7 @@ const buildMpPrompt = async () => {
       name: 'desc',
       type: 'input',
       message: _log.chalk.bgBlue('输入版本描述'),
-      filter: (val) => val || '',
+      filter: (val) => val || 'ci构建',
     },
     {
       name: 'version',
@@ -60,6 +62,7 @@ const buildMpPrompt = async () => {
     answer.desc = answers.desc;
     answer.version = answers.version;
     answer.groupNotice = answers.groupNotice;
+    answer.isProd = answers.isProd;
     return answers;
   });
 
@@ -91,6 +94,10 @@ const buildMpPrompt = async () => {
       },
     ]);
     answer.isCreateTag = isCreateTag;
+
+    if (isCreateTag) {
+      // 打tag
+    }
 
     // 开始构建流程
     buildMp(answer);
