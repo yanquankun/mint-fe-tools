@@ -51,7 +51,7 @@ module.exports = {
       const { stdout: commit } = await execa('git', ['log', '-1', '--pretty=format:%s'], {
         cwd: process.cwd(),
       });
-      return `${author}-${date}-${commit.trim()}`.replace(/\s/g, '');
+      return `${author}-${date}-${commit.trim()}`.replace(/\s|:/g, '');
     } catch (error) {
       _log.error(error, 'getCommit');
       process.exit(1);

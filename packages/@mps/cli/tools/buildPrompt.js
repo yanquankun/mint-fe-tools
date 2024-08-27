@@ -95,12 +95,8 @@ const buildMpPrompt = async () => {
     ]);
     answer.isCreateTag = isCreateTag;
 
-    if (isCreateTag) {
-      // 打tag
-    }
-
     // 开始构建流程
-    buildMp(answer);
+    // buildMp(answer);
   }
 
   // 本地版本流水线

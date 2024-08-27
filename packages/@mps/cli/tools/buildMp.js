@@ -5,6 +5,7 @@ const { getMpsAppJson } = require('./getProjectJson');
 const { isArray } = require('../utils/type');
 const { timestampToTime } = require('../utils/common');
 const execa = require('execa');
+const { getCommit } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 
 function getProject(appConfig) {
@@ -110,6 +111,26 @@ module.exports = async (answer) => {
   }
 
   _log.done('小程序构建完成', 'build');
+  // 生成tag
+  if (prompt.isCreateTag) {
+    const tagName = await getCommit();
+    _log.info(tagName, 'TagName');
+
+    try {
+      execa.sync('git', ['tag', tagName], {
+        cwd: process.cwd(),
+      });
+    } catch (error) {
+      _log.error('生成tag失败：' + error, 'TagName');
+    }
+    try {
+      execa.sync('git', ['push', 'origin', tagName], {
+        cwd: process.cwd(),
+      });
+    } catch (error) {
+      _log.error('推送tag失败：' + error, 'TagName');
+    }
+  }
   console.log('');
   answer.isCreateQrcode &&
     _log.warn('已开启自动更新本地版二维码任务，请勿关闭当前命令窗口', 'Warn!!!');
