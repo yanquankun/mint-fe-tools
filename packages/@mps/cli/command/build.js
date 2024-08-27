@@ -5,7 +5,6 @@ const _log = require('../utils/logger');
 module.exports = async (generator, { isDebug = false }) => {
   const output = await buildMpPrompt(isDebug);
   _log.done('小程序构建完成', 'build');
-  console.log('output', output);
   !output.isAtuoUpdateQrcode && process.exit(1);
   // isDebug &&
   //   _log.info(

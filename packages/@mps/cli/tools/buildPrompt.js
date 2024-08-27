@@ -7,8 +7,18 @@ const git = require('./git');
 const buildMpPrompt = async (isDebug = false) => {
   // 需要对外暴露的参数
   const output = {
+    // 版本描述
+    desc: '',
+    // 版本号
+    version: '',
+    // 是否配置群通知
+    groupNotice: false,
+    // 是否生成本地版二维码
+    isCreateQrcode: false,
     // 是否注册自动登录
     isAtuoUpdateQrcode: false,
+    // 是否打tag
+    isCreateTag: false,
   };
 
   const basicOutput = await prompt([
@@ -44,7 +54,12 @@ const buildMpPrompt = async (isDebug = false) => {
       type: 'rawlist',
       message: _log.chalk.bgBlue('请选择是否为发布版本'),
     },
-  ]);
+  ]).then((answers) => {
+    output.desc = answers.desc;
+    output.version = answers.version;
+    output.groupNotice = answers.groupNotice;
+    return answers;
+  });
 
   // 生产版本流水线
   if (basicOutput.isProd) {
@@ -53,7 +68,12 @@ const buildMpPrompt = async (isDebug = false) => {
     const branch = await git.getBranch();
 
     if (!branchWhiteList.includes(branch)) {
-      _log.error(`当前分支 ${branch} 不在白名单中，无法发布`, 'buildMpPrompt');
+      _log.error(
+        `当前分支 ${_log.chalk.yellow(branch)} 不在白名单中，无法发布，请检查 ${_log.chalk.yellow(
+          'apps.json',
+        )} 中 ${_log.chalk.yellow('branchs')} 字段`,
+        'buildMpPrompt',
+      );
       process.exit(1);
     }
 
@@ -68,7 +88,7 @@ const buildMpPrompt = async (isDebug = false) => {
         message: _log.chalk.bgBlue('是否打tag'),
       },
     ]);
-    console.log(isCreateTag);
+    output.isCreateTag = isCreateTag;
 
     // 开始构建流程
   }
@@ -84,6 +104,7 @@ const buildMpPrompt = async (isDebug = false) => {
       type: 'rawlist',
       message: _log.chalk.bgBlue('是否生成本地版二维码'),
     });
+    output.isCreateQrcode = isCreateQrcode;
 
     isCreateQrcode &&
       (await prompt({
@@ -107,7 +128,6 @@ const buildMpPrompt = async (isDebug = false) => {
         return;
       }));
 
-    console.log(isCreateQrcode);
     // 开始构建流程
   }
 
