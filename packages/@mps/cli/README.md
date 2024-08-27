@@ -19,25 +19,26 @@
 
 ### test
 
-- 在 `根目录中` npm link
-- 即可通过 mpscli 进行调用
+- cmd `npm link`
 
 ### install
 
-- 运行 `npm i`
+- cmd `npm i`
 
 ### publish TODO
 
-- update `package.json` version
+- 记得 update `package.json` version
 - 在 lerna 根目录中执行
 
 ### use
 
-- run `mpscli` or `mpscli -h` or `mpscli --help` 查看脚手架帮助
-- run `mpscli init` 将在你的小程序项目根目录中创建 mpscli 配置目录
-- run `mpscli clean` 删除 mpscli 配置目录
-- run `mpscli clean devQr` 清空 mpscli 的本地版小程序二维码目录
-- run `mpscli version` 获取 mpscli 版本
+- `所有指令请在与.mps同级目录进行操作`
+- run `mpsc` or `mpsc -h` or `mpsc --help` 查看脚手架帮助
+- run `mpsc version` 获取 mpsc 版本
+- run `mpsc init` 将在你的 cmd 执行目录中创建 mpsc 配置目录
+- run `mpsc build` 将在你的 cmd 执行目录中构建小程序
+- run `mpsc clean` 删除 mpsc 配置目录
+- run `mpsc git` 获取 mps-cli 版本
 
 ### 原理图
 
