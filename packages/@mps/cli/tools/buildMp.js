@@ -1,5 +1,6 @@
 // const isDebug = globalThis['buildDebug'] || false;
 const _log = require('../utils/logger');
+// const ci = require('miniprogram-ci');
 
 module.exports = (answer) => {
   const { isAtuoUpdateQrcode } = answer;
