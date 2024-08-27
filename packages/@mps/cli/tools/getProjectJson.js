@@ -32,8 +32,10 @@ exports.getMpPrejectJson = (dir = '', isDebug = false) => {
 exports.getProjectPackage = (isDebug = false) => {
   try {
     const context = path.join(process.cwd(), 'package.json');
-    const package = fs.readFileSync(context, 'utf-8');
-    return JSON.parse(package);
+    const package = require(context);
+    // const context = path.join(process.cwd(), 'package.json');
+    // const package = fs.readFileSync(context, 'utf-8');
+    return package;
   } catch (error) {
     isDebug && _log.error(error, 'getProjectPackage');
     return {};

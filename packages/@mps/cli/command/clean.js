@@ -3,8 +3,9 @@ const _log = require('../utils/logger');
 const inquirer = require('inquirer');
 const file = require('../utils/file');
 const cwd = process.cwd();
+const isDebug = globalThis['cleanDebug'] || false;
 
-module.exports = async (generator, { isCleanSelf = false, isDebug = false }) => {
+module.exports = async (generator, { isCleanSelf = false }) => {
   const path = isCleanSelf ? `${cwd}/.mps` : `${cwd}/.mps/previewQrCode`;
 
   if (!file.isExitDir(path)) {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const program = require('commander'); // const inquirer = require('inquirer');
+const program = require('commander');
 const version = require('../package.json').version;
 const generator = require('../lib/generator');
 const { loadLocalModule } = require('../lib/module');
@@ -25,6 +25,9 @@ program
     //   _log.info(`当前设置环境是${env}`, 'init');
     // }
     _log.info('创建项目开始', 'init');
+    if (name.debug) {
+      globalThis['initDebug'] = true;
+    }
     try {
       const fn = await loadLocalModule('../command/init.js');
       isFunction(fn) &&
@@ -47,9 +50,11 @@ program
   .action(async (name) => {
     _log.info('开始执行清除操作', 'clean');
     try {
+      if (name.debug) {
+        globalThis['cleanDebug'] = true;
+      }
       const fn = await loadLocalModule('../command/clean.js');
-      isFunction(fn) &&
-        fn.call(null, generator, { isCleanSelf: Boolean(name.self), isDebug: Boolean(name.debug) });
+      isFunction(fn) && fn.call(null, generator, { isCleanSelf: Boolean(name.self) });
     } catch (e) {
       _log.error(e, 'clean');
     }
@@ -87,13 +92,13 @@ program
   .description('构建小程序')
   .action(async (name) => {
     if (name.debug) {
-      _log.log('打开debug模式', 'build');
+      globalThis['buildDebug'] = true;
     }
 
     _log.info('开始构建小程序', 'build');
     try {
       const fn = await loadLocalModule('../command/build.js');
-      isFunction(fn) && fn.call(null, generator, { isDebug: Boolean(name.debug) });
+      isFunction(fn) && fn.call(null);
     } catch (e) {
       _log.error(e, 'build');
     }

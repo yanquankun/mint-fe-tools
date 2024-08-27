@@ -6,15 +6,16 @@ const inquirer = require('inquirer');
 const { loadModule } = require('../lib/module');
 const { isFunction } = require('../utils/type');
 const cliLbgPath = `${root}/node_modules/@mps/cli-lbg`;
+const isDebug = globalThis['initDebug'] || false;
 
-const render = async (generator, ejsOptions, isDebug) => {
+const render = async (generator, ejsOptions) => {
   const templateFiles = await generator.render('/template', ejsOptions, isDebug);
   writeFileTree(cwd, templateFiles);
 
   _log.done('.mps目录创建成功', 'writeFileTree');
 };
 
-module.exports = async (generator, { isDebug = false, force = false, lbg = false }) => {
+module.exports = async (generator, { force = false, lbg = false }) => {
   const isMp = isMpProject(force, isDebug);
   if (!force && !isMp) {
     _log.error(
