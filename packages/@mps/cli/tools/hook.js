@@ -11,7 +11,7 @@ const callHook = async (hook, options = {}) => {
   const hookPath = path.join(process.cwd(), `.mps/hooks/${hook}.js`);
   if (isExitFile(hookPath)) {
     const module = await loadProjectModule(hookPath);
-    if (module[hook] && isFunction(module[hook])) {
+    if (module[hook] || !isFunction(module[hook])) {
       _log.error(
         `${_log.chalk.yellow(hook + '.js')} 需要实现 ${_log.chalk.yellow(
           hook,

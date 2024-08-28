@@ -6,18 +6,12 @@
 <% if (Boolean(lbgNoticeTaskTemp)) { %>
 <%- lbgNoticeTaskTemp %>
 <% } else { %>
-// cli将构建后的信息传递给使用者
-function getBuildInfo(buildInfo, gituser) {
-  // 获取构建后的信息buildInfo
-}
-
 // 注册你的通知逻辑
-function notice() {
+function noticeTask(buildInfo) {
   // do your notice
 }  
 <% } -%>
 
 module.exports = {
-  getBuildInfo,
-  notice,
+  noticeTask
 };
