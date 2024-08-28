@@ -104,8 +104,8 @@ const buildMpPrompt = async () => {
     ]);
     answer.isCreateTag = isCreateTag;
 
-    // 开始构建流程
-    // buildMp(answer);
+    // 开始构建流程;
+    buildMp(answer);
   }
 
   // 本地版本流水线

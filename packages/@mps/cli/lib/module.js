@@ -82,9 +82,19 @@ exports.loadModule = function (request, context, force = false) {
   }
 };
 
+/** 加载cli本地模板 */
 exports.loadLocalModule = function (request) {
   try {
     return require(path.relative(process.cwd(), request));
+  } catch (e) {
+    _log.error(e, request);
+  }
+};
+
+/** 加载外部工程本地模块 */
+exports.loadProjectModule = function (request) {
+  try {
+    return require(request);
   } catch (e) {
     _log.error(e, request);
   }

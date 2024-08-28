@@ -7,6 +7,7 @@ const { timestampToTime } = require('../utils/common');
 const execa = require('execa');
 const { getCommit } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
+const { callHook } = require('./hook');
 
 function getProject(appConfig) {
   return new ci.Project({
@@ -92,6 +93,8 @@ module.exports = async (answer) => {
     });
   }
 
+  await callHook('beforeBuild');
+
   for (let index = 0; index < weapps.length; index++) {
     const weapp = weapps[index];
     const appId = weapp.appId;
@@ -101,6 +104,7 @@ module.exports = async (answer) => {
     // 密钥路径
     const privateKeyPath = path.join(process.cwd(), '.mps/secrets/private' + appId + '.key');
 
+    await callHook('beforeTaskBuild');
     await uploadMp(answer, {
       appId,
       appName,
@@ -108,13 +112,14 @@ module.exports = async (answer) => {
       projectPath,
       privateKeyPath,
     });
+    await callHook('afterTaskBuild');
   }
 
-  _log.done('小程序构建完成', 'build');
+  await callHook('afterBuild');
+
   // 生成tag
   if (prompt.isCreateTag) {
     const tagName = await getCommit();
-    _log.info(tagName, 'TagName');
 
     try {
       execa.sync('git', ['tag', tagName], {
@@ -130,7 +135,17 @@ module.exports = async (answer) => {
     } catch (error) {
       _log.error('推送tag失败：' + error, 'TagName');
     }
+
+    _log.info(`TAG： ${tagName} 推送成功`, 'TagName');
   }
+
+  // 群通知
+  if (prompt.groupNotice) {
+    _log.done('群通知任务执行中...', 'build');
+    await callHook('noticeTask');
+  }
+
+  _log.done('小程序构建完成', 'build');
   console.log('');
   answer.isCreateQrcode &&
     _log.warn('已开启自动更新本地版二维码任务，请勿关闭当前命令窗口', 'Warn!!!');
