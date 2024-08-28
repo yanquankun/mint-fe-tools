@@ -141,7 +141,7 @@ const buildMpPrompt = async () => {
               setTimeout(() => {
                 autoUpdate();
                 buildMp(answer);
-              }, 25 * 60 * 1000);
+              }, 20 * 60 * 1000);
           };
           autoUpdate();
         }
