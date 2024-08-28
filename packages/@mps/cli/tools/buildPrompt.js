@@ -5,6 +5,7 @@ const { getProjectPackage, getMpsAppJson } = require('./getProjectJson');
 const git = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 const buildMp = require('./buildMp');
+const { checkVersion } = require('../utils/common');
 
 const buildMpPrompt = async () => {
   // 需要对外暴露的参数
@@ -38,7 +39,15 @@ const buildMpPrompt = async () => {
       message: _log.chalk.bgBlue(
         '输入版本号，格式为[x.[y.[z]]]，不填则以package.json的version字段为准',
       ),
-      filter: (val) => val || getProjectPackage(isDebug).version,
+      filter: (val) => {
+        const version = val || getProjectPackage(isDebug).version;
+        if (!checkVersion(version)) {
+          console.log('');
+          _log.error(`${version}不符合规范，格式为[x.[y.[z]]]`, 'buildPrompt');
+          process.exit(1);
+        }
+        return version;
+      },
     },
     {
       name: 'groupNotice',

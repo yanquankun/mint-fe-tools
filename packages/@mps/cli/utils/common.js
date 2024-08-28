@@ -10,6 +10,12 @@ const timestampToTime = (timestamp) => {
   return Y + M + D + h + m + s;
 };
 
+const checkVersion = (version) => {
+  const versionRegex = /^(0|[1-9]\d*)(\.(0|[1-9]\d*))*$/;
+  return versionRegex.test(version);
+};
+
 module.exports = {
   timestampToTime,
+  checkVersion,
 };
