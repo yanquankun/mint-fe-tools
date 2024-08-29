@@ -19,7 +19,7 @@ const callHook = async (hook, options) => {
         'callHook',
       );
     }
-    isFunction(module[hook]) && module[hook].call(null, options);
+    isFunction(module[hook]) && (await module[hook].call(null, options));
   }
 };
 

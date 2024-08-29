@@ -101,7 +101,7 @@ const imgToBase64 = (imagePath) => {
     const imageBuffer = fs.readFileSync(imagePath);
 
     // 将Buffer转换为Base64编码的字符串
-    const base64Image = 'data:image/jpeg;base64,' + imageBuffer.toString('base64');
+    const base64Image = 'data:image/jpg;base64,' + imageBuffer.toString('base64');
 
     return base64Image;
   } catch (error) {

@@ -1,8 +1,6 @@
 const objectToString = Object.prototype.toString;
 const toTypeString = (value) => objectToString.call(value);
 
-exports.isFunction = (val) => Object.prototype.toString.call(val) === '[object Function]';
-
 exports.isAsyncFunction = (val) => Object.prototype.toString.call(val) === '[object AsyncFunction]';
 
 exports.isArray = (val) => Array.isArray(val);
