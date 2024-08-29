@@ -87,6 +87,18 @@ module.exports = async (answer) => {
     );
   }
 
+  // 执行build构建
+  const manager = mpsJson.manager;
+  const command = mpsJson.command;
+  // !projectPath 代表为微信小程序原生，构建是通过开发者工具完成的
+  // manager存在，则强制执行该cmd
+  if (!projectPath || manager) {
+    const args = manager === 'yarn' ? [command] : ['run', command];
+    execa.sync(manager, args, {
+      cwd: process.cwd(),
+    });
+  }
+
   if (answer.isCreateQrcode) {
     execa('mpsc', ['clean'], {
       cwd: process.cwd(),
