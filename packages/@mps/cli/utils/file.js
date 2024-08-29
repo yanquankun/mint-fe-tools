@@ -95,14 +95,52 @@ const base64ToImg = (base64) => {
  * @description 将图片转换为base64
  * @param {*} image
  */
-const imgToBase64 = (image) => {
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(canvas, 0, 0, image.width, image.height);
-  const dataURL = canvas.toDataURL('image/png');
-  return dataURL;
+const imgToBase64 = (imagePath) => {
+  try {
+    // 读取图片文件并将其转换为Buffer
+    const imageBuffer = fs.readFileSync(imagePath);
+
+    // 将Buffer转换为Base64编码的字符串
+    const base64Image = 'data:image/jpeg;base64,' + imageBuffer.toString('base64');
+
+    return base64Image;
+  } catch (error) {
+    _log.error(error, 'imgToBase64');
+    return '';
+  }
+};
+
+const getFileNameWithoutExtension = (filePath) => {
+  const baseName = path.basename(filePath);
+  const extName = path.extname(filePath);
+  return baseName.replace(extName, '');
+};
+
+// 获取目录下指定后缀名的文件
+const getFilesMapWithExtension = (dir, extension) => {
+  let results = [];
+
+  try {
+    const list = fs.readdirSync(dir);
+
+    list.forEach((file) => {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+
+      if (stat && stat.isDirectory()) {
+        results = results.concat(getFilesMapWithExtension(filePath, extension));
+      } else {
+        if (path.extname(file) === extension) {
+          const baseUrl = imgToBase64(filePath);
+          results.push({ fileName: getFileNameWithoutExtension(filePath), baseUrl });
+        }
+      }
+    });
+  } catch (error) {
+    _log.warn(error, 'getFilesWithExtension');
+  }
+
+  return results;
 };
 
 module.exports = {
@@ -114,4 +152,6 @@ module.exports = {
   curDir,
   base64ToImg,
   imgToBase64,
+  getFilesMapWithExtension,
+  getFileNameWithoutExtension,
 };

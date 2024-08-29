@@ -5,7 +5,7 @@ const { isExitFile } = require('../utils/file');
 const { isFunction } = require('../utils/type');
 const { loadProjectModule } = require('../lib/module');
 
-const callHook = async (hook, options = {}) => {
+const callHook = async (hook, options) => {
   if (!hooks.includes(hook)) _log.warn(`hook ${hook} 不合法`, 'callHook');
 
   const hookPath = path.join(process.cwd(), `.mps/hooks/${hook}.js`);

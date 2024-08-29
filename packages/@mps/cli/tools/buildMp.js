@@ -8,6 +8,7 @@ const execa = require('execa');
 const { getCommit } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 const { callHook } = require('./hook');
+const { getFilesMapWithExtension } = require('../utils/file');
 
 function getProject(appConfig) {
   return new ci.Project({
@@ -154,7 +155,9 @@ module.exports = async (answer) => {
   // 群通知
   if (prompt.groupNotice) {
     _log.done('群通知任务执行中...', 'build');
-    await callHook('noticeTask');
+    const qrcodePath = path.join(process.cwd(), '.mps/previewQrCode/');
+    const qrcodeFiles = await getFilesMapWithExtension(qrcodePath, '.jpg');
+    await callHook('noticeTask', qrcodeFiles);
   }
 
   _log.done('小程序构建完成', 'build');
