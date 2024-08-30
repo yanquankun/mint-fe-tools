@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/yanquankun/mint-fe-tools/issues"
   },
-  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mps/cli-lbg/README.md"
+  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mps/cli-lbg/README.md",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
