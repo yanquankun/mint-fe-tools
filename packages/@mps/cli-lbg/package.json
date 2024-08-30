@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yanquankun/mint-fe-tools",
+    "url": "git+https://github.com/yanquankun/mint-fe-tools.git",
     "directory": "packages/@mps/cli-lbg"
   },
   "bugs": {
