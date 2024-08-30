@@ -5,7 +5,7 @@ const { writeFileTree, isExitDir, root } = require('../utils/file');
 const inquirer = require('inquirer');
 const { loadModule } = require('../lib/module');
 const { isFunction } = require('../utils/type');
-const cliLbgPath = `${root}/node_modules/@mps/cli-lbg`;
+const cliLbgPath = `${root}/node_modules/@yanquankun/cli-lbg`;
 const isDebug = globalThis['initDebug'] || false;
 
 const render = async (generator, ejsOptions) => {
@@ -44,7 +44,7 @@ module.exports = async (generator, { force = false, lbg = false }) => {
   let lbgNoticeTaskTemp = '';
   if (lbg) {
     try {
-      const { lbg: lbgModule } = await loadModule('@mps/cli-lbg', root);
+      const { lbg: lbgModule } = await loadModule('@yanquankun/cli-lbg', root);
       isFunction(lbgModule.getLbgNoticeTaskTemp) &&
         (lbgNoticeTaskTemp = lbgModule.getLbgNoticeTaskTemp(cliLbgPath));
     } catch (err) {
