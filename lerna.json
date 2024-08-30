@@ -2,13 +2,5 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "version": "independent",
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "command": {
-    "publish": {
-      "ignoreChanges": ["**/*.md"],
-      "message": "chore(release): publish",
-      "conventionalCommits": true,
-      "exec": "npx commitlint --from $LERNA_PACKAGE_NAME"
-    }
-  }
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
