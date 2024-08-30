@@ -1,5 +1,5 @@
 {
-  "name": "@mps/cli",
+  "name": "@yanquankun/cli",
   "version": "0.0.1",
   "description": "小程序ci构建工具脚手架",
   "bin": {

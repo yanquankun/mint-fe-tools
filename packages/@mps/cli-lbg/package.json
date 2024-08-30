@@ -1,5 +1,5 @@
 {
-  "name": "@mps/cli-lbg",
+  "name": "@yanquankun/cli-lbg",
   "version": "0.0.1",
   "description": "为mps-cli提供 lgb 专用部分",
   "main": "index.js",
