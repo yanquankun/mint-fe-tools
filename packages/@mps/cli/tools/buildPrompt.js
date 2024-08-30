@@ -19,7 +19,7 @@ const buildMpPrompt = async () => {
     // 是否为发布版本
     isProd: false,
     // 是否生成本地版二维码
-    isCreateQrcode: false,
+    // isCreateQrcode: false,
     // 是否注册自动更新预览版二维码
     isAtuoUpdateQrcode: false,
     // 是否打tag
@@ -78,7 +78,7 @@ const buildMpPrompt = async () => {
   // 生产版本流水线
   if (basicOutput.isProd) {
     const mpsJson = getMpsAppJson();
-    const branchWhiteList = mpsJson.branches || ['master'];
+    const branchWhiteList = mpsJson.branchs || ['master'];
     const branch = await git.getBranch();
 
     if (!branchWhiteList.includes(branch)) {
@@ -110,43 +110,43 @@ const buildMpPrompt = async () => {
 
   // 本地版本流水线
   if (!basicOutput.isProd) {
-    const { isCreateQrcode } = await prompt({
-      name: 'isCreateQrcode',
+    // const { isCreateQrcode } = await prompt({
+    //   name: 'isCreateQrcode',
+    //   choices: [
+    //     { name: '是', value: true },
+    //     { name: '否', value: false },
+    //   ],
+    //   type: 'rawlist',
+    //   message: _log.chalk.bgBlue('是否生成本地版二维码'),
+    // });
+    // answer.isCreateQrcode = isCreateQrcode;
+
+    // if (isCreateQrcode) {
+    await prompt({
+      name: 'isAtuoUpdateQrcode',
       choices: [
         { name: '是', value: true },
         { name: '否', value: false },
       ],
       type: 'rawlist',
-      message: _log.chalk.bgBlue('是否生成本地版二维码'),
+      message: _log.chalk.bgBlue('是否自动更新本地版二维码'),
+    }).then((res) => {
+      const { isAtuoUpdateQrcode } = res;
+      if (isAtuoUpdateQrcode) {
+        answer.isAtuoUpdateQrcode = true;
+        _log.info('注册自动更新逻辑', 'buildMpPrompt');
+        let count = 5;
+        const autoUpdate = function () {
+          count-- > 0 &&
+            setTimeout(() => {
+              autoUpdate();
+              buildMp(answer);
+            }, 23 * 60 * 1000);
+        };
+        autoUpdate();
+      }
     });
-    answer.isCreateQrcode = isCreateQrcode;
-
-    if (isCreateQrcode) {
-      await prompt({
-        name: 'isAtuoUpdateQrcode',
-        choices: [
-          { name: '是', value: true },
-          { name: '否', value: false },
-        ],
-        type: 'rawlist',
-        message: _log.chalk.bgBlue('是否自动更新本地版二维码'),
-      }).then((res) => {
-        const { isAtuoUpdateQrcode } = res;
-        if (isAtuoUpdateQrcode) {
-          answer.isAtuoUpdateQrcode = true;
-          _log.info('注册自动更新逻辑', 'buildMpPrompt');
-          let count = 5;
-          const autoUpdate = function () {
-            count-- > 0 &&
-              setTimeout(() => {
-                autoUpdate();
-                buildMp(answer);
-              }, 23 * 60 * 1000);
-          };
-          autoUpdate();
-        }
-      });
-    }
+    // }
 
     // 开始构建流程
     buildMp(answer);

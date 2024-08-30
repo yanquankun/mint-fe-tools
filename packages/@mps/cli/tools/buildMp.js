@@ -5,7 +5,7 @@ const { getMpsAppJson } = require('./getProjectJson');
 const { isArray } = require('../utils/type');
 const { timestampToTime } = require('../utils/common');
 const execa = require('execa');
-const { getCommit } = require('./git');
+const { getCommit, getUser, getBranch, getRemote } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 const { callHook } = require('./hook');
 const { getFilesMapWithExtension } = require('../utils/file');
@@ -20,7 +20,7 @@ function getProject(appConfig) {
   });
 }
 
-const uploadMp = async (prompt, mpConfig) => {
+const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
   const project = getProject(mpConfig);
   isDebug && _log.info(JSON.stringify(project), 'getProject');
 
@@ -33,7 +33,10 @@ const uploadMp = async (prompt, mpConfig) => {
         es6: true,
         es7: true,
       },
+      // robot: prompt.isProd ? 1 : 2,
     });
+
+    buildSuccessAppNames.push(mpConfig.appName);
 
     isDebug && _log.info(JSON.stringify(uploadResult), 'uploadResult');
 
@@ -42,11 +45,12 @@ const uploadMp = async (prompt, mpConfig) => {
     _log.error(`${mpConfig.appName} 上传微信后台失败，原因：${error}`, 'uploadMp');
     process.exit(1);
   }
-
-  if (prompt.isCreateQrcode) await buildPreview(project, prompt, mpConfig);
 };
 
-const buildPreview = async (project, prompt, mpConfig) => {
+const buildPreview = async (prompt, mpConfig) => {
+  const project = getProject(mpConfig);
+  isDebug && _log.info(JSON.stringify(project), 'getProject');
+
   try {
     const qrcodeName = `${mpConfig.appName}-有效期至${timestampToTime(
       +new Date() + 25 * 60 * 1000,
@@ -108,7 +112,8 @@ module.exports = async (answer) => {
     });
   }
 
-  if (answer.isCreateQrcode) {
+  // 本地版 先清空qrcode目录
+  if (!answer.isProd) {
     execa('mpsc', ['clean'], {
       cwd: process.cwd(),
     });
@@ -116,6 +121,7 @@ module.exports = async (answer) => {
 
   await callHook('beforeBuild');
 
+  const buildSuccessAppNames = [];
   for (let index = 0; index < weapps.length; index++) {
     const weapp = weapps[index];
     const appId = weapp.appId;
@@ -126,13 +132,29 @@ module.exports = async (answer) => {
     const privateKeyPath = path.join(process.cwd(), '.mps/secrets/private.' + appId + '.key');
 
     await callHook('beforeTaskBuild');
-    await uploadMp(answer, {
-      appId,
-      appName,
-      prePagePath,
-      projectPath,
-      privateKeyPath,
-    });
+
+    if (answer.isProd) {
+      await uploadMp(
+        answer,
+        {
+          appId,
+          appName,
+          prePagePath,
+          projectPath,
+          privateKeyPath,
+        },
+        buildSuccessAppNames,
+      );
+    } else {
+      await buildPreview(answer, {
+        appId,
+        appName,
+        prePagePath,
+        projectPath,
+        privateKeyPath,
+      });
+    }
+
     await callHook('afterTaskBuild');
   }
 
@@ -163,9 +185,34 @@ module.exports = async (answer) => {
   // 群通知
   if (answer.groupNotice) {
     _log.done('群通知任务执行中...', 'build');
-    const qrcodePath = path.join(process.cwd(), '.mps/previewQrCode/');
-    const qrcodeFiles = await getFilesMapWithExtension(qrcodePath, '.jpg');
-    await callHook('noticeTask', qrcodeFiles);
+    const extraInfo = {
+      user: await getUser(),
+      branch: await getBranch(),
+      reomte: await getRemote(),
+      tag: answer.isCreateTag ? await getCommit() : '',
+      // prod 提供构建成功小程序的名称
+      // dev 版本不需要，直接从qrcode filename 获取
+      buildSuccessAppNames: answer.isProd ? buildSuccessAppNames.join(',') : '',
+    };
+    const options = {
+      isProd: answer.isProd,
+      extraInfo,
+    };
+    if (answer.isProd) {
+      options.qrcodeFiles = [
+        {
+          baseUrl:
+            'https://www.yanquankun.com:9300/cdn/mpsc/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%8A%A9%E6%89%8B.jpeg',
+          fileName: '微信扫码右侧小程序助手二维码访问最新体验版，如需设置体验版请联系上述开发人员',
+        },
+      ];
+    } else {
+      const qrcodePath = path.join(process.cwd(), '.mps/previewQrCode/');
+      const qrcodeFiles = await getFilesMapWithExtension(qrcodePath, '.jpg');
+      options.qrcodeFiles = qrcodeFiles;
+    }
+
+    await callHook('noticeTask', options);
   }
 
   _log.done('小程序构建完成', 'build');

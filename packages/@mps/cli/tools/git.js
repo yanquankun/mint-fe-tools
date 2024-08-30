@@ -1,5 +1,6 @@
 const execa = require('execa');
 const _log = require('../utils/logger');
+const { timestampToTime } = require('../utils/common');
 
 module.exports = {
   getUser: async () => {
@@ -51,7 +52,10 @@ module.exports = {
       const { stdout: commit } = await execa('git', ['log', '-1', '--pretty=format:%s'], {
         cwd: process.cwd(),
       });
-      return `${author}-${date}-${commit.trim()}`.replace(/\s|:/g, '');
+      return `${timestampToTime(+new Date())}-${author}-${date}-${commit.trim()}`.replace(
+        /\s|:/g,
+        '',
+      );
     } catch (error) {
       _log.error(error, 'getCommit');
       process.exit(1);
