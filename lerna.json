@@ -1,6 +1,6 @@
 {
-  "packages": ["packages/*"],
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "version": "independent"
+  "packages": ["packages/@mps/cli-lbg"],
+  "npmClient": "npm",
+  "version": "independent",
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

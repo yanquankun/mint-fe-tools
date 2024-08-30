@@ -1,2 +1,3 @@
 packages/@mps/cli/template/**
 packages/@mps/cli-lbg/templates/**
+/.nx/workspace-data
