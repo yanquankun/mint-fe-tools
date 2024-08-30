@@ -58,7 +58,7 @@ const buildPreview = async (prompt, mpConfig) => {
     const qrcodeOutputDest = path.join(process.cwd(), `.mps/previewQrCode/${qrcodeName}.jpg`);
     const previewResult = await ci.preview({
       project,
-      desc: prompt.desc, // 此备注将显示在“小程序助手”开发版列表中
+      desc: prompt.desc,
       setting: {
         es6: true,
         es7: true,
