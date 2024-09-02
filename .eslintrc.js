@@ -19,8 +19,8 @@ module.exports = {
     '**/build/**',
     '.nx/*',
     '.yarn/*',
-    'packages/@mps/cli/template/**',
-    'packages/@mps/cli-lbg/templates/**',
+    'packages/@mpsc/cli/template/**',
+    'packages/@mpsc/cli-lbg/templates/**',
   ],
   rules: {
     indent: [
