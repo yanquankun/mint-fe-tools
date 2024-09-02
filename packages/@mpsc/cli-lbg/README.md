@@ -1,6 +1,6 @@
-# @mpsc/cli-lgb
+# @mpsc/cli-lbg
 
-### 提供 lgb 专用部分
+### 提供 lbg 专用部分
 
 ### test
 

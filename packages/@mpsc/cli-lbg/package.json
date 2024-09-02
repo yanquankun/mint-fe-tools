@@ -1,7 +1,7 @@
 {
   "name": "@mpsc/cli-lbg",
-  "version": "0.0.1",
-  "description": "为mps-cli提供 lgb 专用部分",
+  "version": "0.0.2",
+  "description": "为mps-cli提供 lbg 专用部分",
   "main": "index.js",
   "keywords": [
     "mps",
