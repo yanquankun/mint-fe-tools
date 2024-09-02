@@ -1,12 +1,13 @@
 {
-  "name": "@yqk/mps-lbg",
+  "name": "@mpsc/mps-lbg",
   "version": "0.0.1",
   "description": "为mps-cli提供 lgb 专用部分",
   "main": "index.js",
   "keywords": [
     "mps",
     "cli",
-    "lbg"
+    "lbg",
+    "mpsc"
   ],
   "author": "yanquankun",
   "license": "MIT",
@@ -18,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/yanquankun/mint-fe-tools/issues"
   },
-  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mps/cli-lbg/README.md",
+  "homepage": "https://github.com/yanquankun/mint-fe-tools/blob/feature/mps-cli/packages/@mpsc/cli-lbg/README.md",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
