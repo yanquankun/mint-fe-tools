@@ -13,12 +13,12 @@ program
   .command('init')
   .description('初始化mps项目目录，将在你的根目录中进行创建，请在你的小程序项目根目录中安装')
   // .option('-e, --env <envName>', '设置你的项目环境')
-  .option('-d, --debug', '是否开启初始化mps目录debug模式')
+  .option('-d, --debug', '开启初始化mps目录debug模式')
   .option(
     '-f, --force <path>',
-    '是否强制在当前目录初始化cli结构，强制会直接在当前目录安装。有可能你的项目是monorepo结构，虽然你可以给每个子包都安装mpscli，但建议只维护一个mpscli配置目录',
+    '强制在当前目录初始化cli结构，强制会直接在当前目录安装。有可能你的项目是monorepo结构，虽然你可以给每个子包都安装mpscli，但建议只维护一个mpscli配置目录',
   )
-  .option('-l, --lbg', '是否使用lbg插件')
+  .option('-l, --lbg', '使用lbg插件')
   .action(async (name) => {
     // const env = name.env || '';
     // if (env) {
@@ -43,7 +43,7 @@ program
 
 program
   .command('clean')
-  .option('-d, --debug', '是否开启清除mps配置目录debug模式')
+  .option('-d, --debug', '开启清除mps配置目录debug模式')
   .option('-q, --qrcode', '清除本地版二维码目录内容')
   .option('-s, --self', '清除整个mps构建目录')
   .description('清除mps配置目录')
@@ -88,7 +88,7 @@ program
 
 program
   .command('build')
-  .option('-d, --debug', '是否开启构建小程序debug模式')
+  .option('-d, --debug', '开启构建小程序debug模式')
   .description('构建小程序')
   .action(async (name) => {
     if (name.debug) {

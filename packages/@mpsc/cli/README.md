@@ -33,14 +33,37 @@
 - 记得 update `package.json` version
 - 在 lerna 根目录中执行 or 手动 npm publish
 
-### use
+### install
+
+- `npm i @mpsc/mps-cli -g` or `npm i @mpsc/mps-cli -D`
+
+### mpsc command
+
+![mpsc](https://www.yanquankun.com:9300/cdn/mpsc/mpsc%E6%8C%87%E4%BB%A4.png 'Magic Gardens')
 
 - `所有指令请在与.mps同级目录进行操作`
 - run `mpsc` or `mpsc -h` or `mpsc --help` 查看脚手架帮助
-- run `mpsc version` 获取 mpsc 版本
+- run `mpsc --version|-V` 获取 mpsc 版本
 - run `mpsc init` 将在你的 cmd 执行目录中创建 mpsc 配置目录
+
+| 参数              |                                                                             说明                                                                             |
+| :---------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| `-d` or `--debug` |                                                                开启初始化 mps 目录 debug 模式                                                                |
+| `-f` or `--force` | 强制在当前目录初始化 cli 结构，强制会直接在当前目录安装。有可能你的项目是 monorepo 结构，虽然你可以给每个子包都安装 mpscli，但建议只维护一个 mpscli 配置目录 |
+| `-l` or `--lbg`   |                                                                        使用 lbg 插件                                                                         |
+
 - run `mpsc build` 将在你的 cmd 执行目录中构建小程序
+
+| 参数              |           说明            |
+| :---------------- | :-----------------------: |
+| `-d` or `--debug` | 开启构建小程序 debug 模式 |
+
 - run `mpsc clean` 删除 mpsc 配置目录
+  | 参数 | 说明 |
+  | :------------- | :----------------------------------: |
+  | `-d` or `--debug` | 开启构建小程序 debug 模式 |
+  | `-q` or `--qrcode` | 清除本地版二维码目录内容 |
+  | `-s` or `--self` | 清除整个 mps 构建目录 |
 - run `mpsc git` 获取 mps-cli 版本
 
 ### 原理图
