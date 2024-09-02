@@ -44,7 +44,7 @@ module.exports = async (generator, { force = false, lbg = false }) => {
   let lbgNoticeTaskTemp = '';
   if (lbg) {
     try {
-      const { lbg: lbgModule } = await loadModule('@yanquankun/cli-lbg', root);
+      const { lbg: lbgModule } = await loadModule('@yqk/mps-lbg', root);
       isFunction(lbgModule.getLbgNoticeTaskTemp) &&
         (lbgNoticeTaskTemp = lbgModule.getLbgNoticeTaskTemp(cliLbgPath));
     } catch (err) {
