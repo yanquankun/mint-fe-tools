@@ -5,7 +5,7 @@ const { writeFileTree, isExitDir, root } = require('../utils/file');
 const inquirer = require('inquirer');
 const { loadModule } = require('../lib/module');
 const { isFunction } = require('../utils/type');
-const cliLbgPath = `${root}/node_modules/@yanquankun/cli-lbg`;
+const cliLbgPath = `${root}/node_modules/@yqk/mps-lbg`;
 const isDebug = globalThis['initDebug'] || false;
 
 const render = async (generator, ejsOptions) => {
