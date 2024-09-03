@@ -77,10 +77,7 @@ const buildPreview = async (prompt, mpConfig) => {
 
     _log.info(`${mpConfig.appName} 设置预览成功`, 'uploadMp');
   } catch (error) {
-    _log.error(
-      `${mpConfig.appName} 生成预览版失败，但构建包仍然上传到微信后台，可自行到微信后台设置体验版，原因：${error}`,
-      'buildPreview',
-    );
+    _log.error(`${mpConfig.appName} 生成预览版失败，原因：${error}`, 'buildPreview');
     process.exit(1);
   }
 };
@@ -88,9 +85,9 @@ const buildPreview = async (prompt, mpConfig) => {
 module.exports = async (answer) => {
   _log.info('即将开始构建小程序', 'buildMp');
   const mpsJson = getMpsAppJson();
+
   // 项目路径，即 project.config.json 所在的目录
   const projectPath = path.join(process.cwd(), mpsJson.projectPath || '');
-
   const weapps = mpsJson.weapps;
   if (!isArray(weapps) || !weapps.length) {
     _log.error(
@@ -104,12 +101,14 @@ module.exports = async (answer) => {
   // 执行build构建
   const manager = mpsJson.manager;
   const command = mpsJson.command;
-  // !projectPath 代表为微信小程序原生，构建是通过开发者工具完成的
-  if (!projectPath) {
+  // !mpsJson.projectPath 代表为微信小程序原生，构建是通过开发者工具完成的
+  if (mpsJson.projectPath) {
+    _log.info('开始构建小程序', 'buildMp');
     const args = manager === 'yarn' ? [command] : ['run', command];
     execa.sync(manager, args, {
       cwd: process.cwd(),
     });
+    _log.done('小程序构建完成', 'buildMp');
   }
 
   // 本地版 先清空qrcode目录
