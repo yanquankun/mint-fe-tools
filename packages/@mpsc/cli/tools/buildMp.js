@@ -9,6 +9,7 @@ const { getCommit, getUser, getBranch, getRemote } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 const { callHook } = require('./hook');
 const { getFilesMapWithExtension } = require('../utils/file');
+const { logWithSpinner, successSpinner } = require('../utils/spinner');
 
 function getProject(appConfig) {
   return new ci.Project({
@@ -23,6 +24,7 @@ function getProject(appConfig) {
 const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
   const project = getProject(mpConfig);
   isDebug && _log.info(JSON.stringify(project), 'getProject');
+  logWithSpinner(_log.chalk.green('⚓'), `${mpConfig.appName} 小程序构建中...`);
 
   try {
     const uploadResult = await ci.upload({
@@ -33,6 +35,7 @@ const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
         es6: true,
         es7: true,
       },
+      onProgressUpdate: (e) => _log.emitLog('info', 'ci.upload', JSON.stringify(e)),
       // robot: prompt.isProd ? 1 : 2,
     });
 
@@ -44,12 +47,15 @@ const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
   } catch (error) {
     _log.error(`${mpConfig.appName} 上传微信后台失败，原因：${error}`, 'uploadMp');
     process.exit(1);
+  } finally {
+    successSpinner();
   }
 };
 
 const buildPreview = async (prompt, mpConfig) => {
   const project = getProject(mpConfig);
   isDebug && _log.info(JSON.stringify(project), 'getProject');
+  logWithSpinner(_log.chalk.green('⚓'), `${mpConfig.appName} 小程序构建中...`);
 
   try {
     const qrcodeName = `${mpConfig.appName}-有效期至${timestampToTime(
@@ -71,6 +77,7 @@ const buildPreview = async (prompt, mpConfig) => {
       pagePath: mpConfig.prePagePath,
       qrcodeFormat: 'image',
       qrcodeOutputDest,
+      onProgressUpdate: (e) => _log.emitLog('info', 'ci.preview', JSON.stringify(e)),
     });
 
     isDebug && _log.info(JSON.stringify(previewResult), 'buildPreview');
@@ -79,10 +86,15 @@ const buildPreview = async (prompt, mpConfig) => {
   } catch (error) {
     _log.error(`${mpConfig.appName} 生成预览版失败，原因：${error}`, 'buildPreview');
     process.exit(1);
+  } finally {
+    successSpinner();
   }
 };
 
 module.exports = async (answer) => {
+  const isLog = globalThis['buildLog'] || false;
+  isLog && _log.writeLog();
+
   _log.info('即将开始构建小程序', 'buildMp');
   const mpsJson = getMpsAppJson();
 
@@ -103,12 +115,15 @@ module.exports = async (answer) => {
   const command = mpsJson.command;
   // !mpsJson.projectPath 代表为微信小程序原生，构建是通过开发者工具完成的
   if (mpsJson.projectPath) {
-    _log.info('开始构建小程序', 'buildMp');
     const args = manager === 'yarn' ? [command] : ['run', command];
+    logWithSpinner(
+      '⚓',
+      `小程序执行${manager} ${manager === 'yarn' ? command : 'run ' + command} 中...`,
+    );
     execa.sync(manager, args, {
       cwd: process.cwd(),
     });
-    _log.done('小程序构建完成', 'buildMp');
+    successSpinner('执行完成');
   }
 
   // 本地版 先清空qrcode目录

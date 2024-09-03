@@ -57,3 +57,8 @@ exports.resumeSpinner = () => {
 exports.failSpinner = (text) => {
   spinner.fail(text);
 };
+
+exports.successSpinner = (text) => {
+  text ? spinner.succeed(text) : spinner.stop();
+  this.stopSpinner(false);
+};

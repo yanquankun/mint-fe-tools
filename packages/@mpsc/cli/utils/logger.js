@@ -2,14 +2,17 @@ const chalk = require('chalk');
 const stripAnsi = require('strip-ansi');
 const readline = require('readline');
 const EventEmitter = require('events');
+const { timestampToTime } = require('./common');
+const execa = require('execa');
+const fs = require('fs');
 
 const { stopSpinner } = require('./spinner');
 
-exports.events = new EventEmitter();
+const events = new EventEmitter();
 
 function _log(type, tag, message) {
-  if (process.env.VUE_CLI_API_MODE && message) {
-    exports.events.emit('log', {
+  if (message) {
+    events.emit('log', {
       message,
       type,
       tag,
@@ -33,6 +36,7 @@ const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `);
 module.exports = {
   chalk,
   chalkTag,
+  emitLog: _log,
   log: (msg = '', tag = null) => {
     tag ? console.log(format(chalkTag(tag), msg)) : console.log(msg);
     _log('log', tag, msg);
@@ -70,5 +74,18 @@ module.exports = {
         console.log(title);
       }
     }
+  },
+  writeLog: async () => {
+    const capturedFileName = timestampToTime(+new Date()) + '_mps.log';
+    await execa('touch', [capturedFileName]);
+
+    events.on('log', (data) => {
+      const text = JSON.stringify(data) + '\n';
+      fs.appendFile(capturedFileName, text, 'utf8', (err) => {
+        if (err) {
+          exports.error('写入文件时发生错误:' + err, 'writeLog');
+        }
+      });
+    });
   },
 };

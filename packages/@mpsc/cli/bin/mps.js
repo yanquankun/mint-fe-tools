@@ -89,16 +89,24 @@ program
 program
   .command('build')
   .option('-d, --debug', '开启构建小程序debug模式')
+  .option('-l, --log', '开启日志记录模式')
   .description('构建小程序')
   .action(async (name) => {
     if (name.debug) {
       globalThis['buildDebug'] = true;
     }
 
+    if (name.log) {
+      globalThis['buildLog'] = true;
+    }
+
     _log.info('开始构建小程序', 'build');
     try {
       const fn = await loadLocalModule('../command/build.js');
-      isFunction(fn) && fn.call(null);
+      isFunction(fn) &&
+        fn.call(null, {
+          log: name.log,
+        });
     } catch (e) {
       _log.error(e, 'build');
     }
