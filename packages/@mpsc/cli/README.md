@@ -33,7 +33,7 @@
 ### publish
 
 - 记得 update `package.json` version
-- 在 lerna 根目录中执行 or 手动 npm publish
+- lerna or npm publish
 
 ### install
 
@@ -68,7 +68,7 @@
 | `-q` or `--qrcode` | 清除本地版二维码目录内容  |
 | `-s` or `--self`   |   清除整个 mps 构建目录   |
 
-- run `mpsc git` 获取 mps-cli 版本
+- run `mpsc git` 获取本 cli 输出的一些 git 相关内容
 
 ### 配置目录说明
 
