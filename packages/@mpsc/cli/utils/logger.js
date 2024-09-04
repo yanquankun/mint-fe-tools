@@ -2,13 +2,8 @@ const chalk = require('chalk');
 const stripAnsi = require('strip-ansi');
 const readline = require('readline');
 const EventEmitter = require('events');
-const { timestampToTime } = require('./common');
-const execa = require('execa');
-const fs = require('fs');
-
-const { stopSpinner } = require('./spinner');
-
 const events = new EventEmitter();
+const fs = require('fs');
 
 function _log(type, tag, message) {
   if (message) {
@@ -56,7 +51,6 @@ module.exports = {
     _log('warn', tag, msg);
   },
   error: (msg, tag = null) => {
-    stopSpinner();
     console.error(format(chalk.bgRed(' ERROR ') + (tag ? chalkTag(tag) : ''), chalk.red(msg)));
     _log('error', tag, msg);
     if (msg instanceof Error) {
@@ -75,13 +69,10 @@ module.exports = {
       }
     }
   },
-  writeLog: async () => {
-    const capturedFileName = timestampToTime(+new Date()) + '_mps.log';
-    await execa('touch', [capturedFileName]);
-
+  writeLog: async (capturedFileName) => {
     events.on('log', (data) => {
       const text = JSON.stringify(data) + '\n';
-      fs.appendFile(capturedFileName, text, 'utf8', (err) => {
+      fs.appendFileSync(capturedFileName, text, 'utf8', (err) => {
         if (err) {
           exports.error('写入文件时发生错误:' + err, 'writeLog');
         }

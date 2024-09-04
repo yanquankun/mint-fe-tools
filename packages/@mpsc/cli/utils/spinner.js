@@ -1,5 +1,6 @@
 const ora = require('ora');
 const chalk = require('chalk');
+const { emitLog } = require('./logger');
 
 const spinner = ora();
 let lastMsg = null;
@@ -21,6 +22,9 @@ exports.logWithSpinner = (symbol, msg) => {
     symbol: symbol + ' ',
     text: msg,
   };
+
+  emitLog('info', symbol, msg);
+
   spinner.start();
 };
 
@@ -60,5 +64,8 @@ exports.failSpinner = (text) => {
 
 exports.successSpinner = (text) => {
   text ? spinner.succeed(text) : spinner.stop();
+  lastMsg = null;
   this.stopSpinner(false);
+
+  emitLog('success', 'successSpinner', text);
 };

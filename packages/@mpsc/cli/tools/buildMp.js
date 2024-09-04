@@ -93,7 +93,11 @@ const buildPreview = async (prompt, mpConfig) => {
 
 module.exports = async (answer) => {
   const isLog = globalThis['buildLog'] || false;
-  isLog && _log.writeLog();
+  if (isLog) {
+    const capturedFileName = timestampToTime(+new Date()) + '_mps.log';
+    await execa('touch', [capturedFileName]);
+    _log.writeLog(capturedFileName);
+  }
 
   _log.info('即将开始构建小程序', 'buildMp');
   const mpsJson = getMpsAppJson();
@@ -147,26 +151,17 @@ module.exports = async (answer) => {
 
     await callHook('beforeTaskBuild');
 
+    const mpInfo = {
+      appId,
+      appName,
+      prePagePath,
+      projectPath,
+      privateKeyPath,
+    };
     if (answer.isProd) {
-      await uploadMp(
-        answer,
-        {
-          appId,
-          appName,
-          prePagePath,
-          projectPath,
-          privateKeyPath,
-        },
-        buildSuccessAppNames,
-      );
+      await uploadMp(answer, mpInfo, buildSuccessAppNames);
     } else {
-      await buildPreview(answer, {
-        appId,
-        appName,
-        prePagePath,
-        projectPath,
-        privateKeyPath,
-      });
+      await buildPreview(answer, mpInfo);
     }
 
     await callHook('afterTaskBuild');

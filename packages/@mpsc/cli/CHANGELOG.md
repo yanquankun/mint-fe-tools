@@ -9,5 +9,11 @@
 
 ### v0.0.3
 
-- 增加 mpsc build 日志输出功能，帮助定位问题
-- 去掉 buildMp 所输出的小程序日志
+- add mpsc build 日志输出功能，帮助定位问题
+- del buildMp 所输出的小程序日志
+
+### v0.0.4
+
+- fix 日志输出缺少问题
+- fix spinner 完成后重复输出问题
+- add spinner 输出到日志
