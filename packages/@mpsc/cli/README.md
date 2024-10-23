@@ -39,7 +39,7 @@
 
 ### install
 
-- `npm i @mpsc/mps-cli -g` or `npm i @mpsc/mps-cli -D`
+- `npm i @mpsc/mps-cli -g`
 
 ### mpsc command
 
