@@ -1,6 +1,6 @@
 {
   "name": "@mpsc/cli-lbg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "为mps-cli提供 lbg 专用部分",
   "main": "index.js",
   "keywords": [

@@ -6,9 +6,14 @@
       "key": "小程序key，没有可不填",
       "prePagePath": "小程序默认启动路径，不填则以微信规则为主"
     }
-  ],
+  ],<% if (Boolean(lbgNoticeTaskTemp)) { %>
+  "atUsers": [{
+    "oa":"填写@人的OA账号",
+    "name":"填写@人的姓名"
+  }],
+  <% } else { %>
   "atUsers": [],
-  "projectPath": "dist",
+  <% } -%>"projectPath": "dist",
   "branchs": ["master"],
   "manager": "<%= packageManage %>",
   "command": "build:weapp"

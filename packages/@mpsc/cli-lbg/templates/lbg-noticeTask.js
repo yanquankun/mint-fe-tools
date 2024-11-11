@@ -1,15 +1,15 @@
-const axios = require("axios");
-const crypto = require("crypto");
-const secret = "35246235877084800650940180230063";
-const groupId = "439164";
-const appid = "58-increase-fe";
-const senderId = "MIS_ROBOT_58-increase-fe";
-const host = "http://openapi.mism.58dns.org";
-const testHost = "http://openapi-meishi.58v5.cn";
+const axios = require('axios');
+const crypto = require('crypto');
+const secret = '35246235877084800650940180230063';
+const groupId = '439164';
+const appid = '58-increase-fe';
+const senderId = 'MIS_ROBOT_58-increase-fe';
+const host = 'http://openapi.mism.58dns.org';
+const testHost = 'http://openapi-meishi.58v5.cn';
 
 function my_md5(timestamp, random) {
-  const sha1 = crypto.createHash("md5");
-  return sha1.update(timestamp + secret + random).digest("hex");
+  const sha1 = crypto.createHash('md5');
+  return sha1.update(timestamp + secret + random).digest('hex');
 }
 
 // 注册你的通知逻辑
@@ -20,7 +20,7 @@ async function noticeTask(buildInfo) {
   const random = now.toString().slice(0, 8);
   const sign = my_md5(now, random);
   // 群通知
-  const url = host + "/v2/msg/sendGroupMsg";
+  const url = host + '/v2/msg/sendGroupMsg';
   // 单聊
   // const url = host + "/v2/msg/sendMsg";
 
@@ -28,26 +28,26 @@ async function noticeTask(buildInfo) {
   const qrcodeFiles = buildInfo.qrcodeFiles || [];
   const tests = [
     {
-      secondContent: "提交者",
+      secondContent: '提交者',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.user}</mis>`,
     },
     {
-      secondContent: "分支",
+      secondContent: '分支',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.branch}</mis>`,
     },
     {
-      secondContent: "仓库地址",
+      secondContent: '仓库地址',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.reomte}</mis>`,
     },
   ];
   if (extraInfo.buildSuccessAppNames)
     tests.unshift({
-      secondContent: "构建应用",
+      secondContent: '构建应用',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.buildSuccessAppNames}</mis>`,
     });
   if (extraInfo.tag)
     tests.push({
-      secondContent: "生成gitTag",
+      secondContent: '生成gitTag',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.tag}</mis>`,
     });
   const cardList = [...tests];
@@ -65,32 +65,37 @@ async function noticeTask(buildInfo) {
       });
     });
 
+  const atUsers = (buildInfo.extraInfo.atUsers || []).map((user) => {
+    return {
+      oa: user,
+    };
+  });
+
   await axios
     .post(
       url,
       {
         senderId,
         toId: groupId,
-        showType: "MIS:cardInteractive",
+        showType: 'MIS:cardInteractive',
+        atUsers,
         content: JSON.stringify({
-          type: "MIS:cardInteractive",
+          type: 'MIS:cardInteractive',
           card: {
             topicId: groupId,
             stateless: true,
             title: {
-              icon: "",
-              text: buildInfo.isProd
-                ? "小程序体验版|生产版发布通知"
-                : "小程序本地版发布通知",
-              color: buildInfo.isProd ? "orange" : "blue",
+              icon: '',
+              text: buildInfo.isProd ? '小程序体验版|生产版发布通知' : '小程序本地版发布通知',
+              color: buildInfo.isProd ? 'orange' : 'blue',
             },
             textSect: {
               mutableElems: {
                 default: cardList,
               },
-              defaultState: "default",
+              defaultState: 'default',
             },
-            pushData: "有新的构建通知~",
+            pushData: '有新的构建通知~',
             clickState: 1,
             canForward: 1,
           },
@@ -100,21 +105,21 @@ async function noticeTask(buildInfo) {
       },
       {
         headers: {
-          "Content-Type": "application/json",
-          "ms-appid": appid,
-          "ms-timestamp": now,
-          "ms-random": random,
-          "ms-sign": sign,
-          "ms-trace": trace,
+          'Content-Type': 'application/json',
+          'ms-appid': appid,
+          'ms-timestamp': now,
+          'ms-random': random,
+          'ms-sign': sign,
+          'ms-trace': trace,
         },
-      }
+      },
     )
     .then(function (response) {
       if (response && response.data && response.data.success === true) {
-        console.log("消息发送成功");
-      } else console.log("消息发送失败:", response.data.msg);
+        console.log('消息发送成功');
+      } else console.log('消息发送失败:', response.data.msg);
     })
     .catch(function (error) {
-      console.log("消息发送失败", error);
+      console.log('消息发送失败', error);
     });
 }
