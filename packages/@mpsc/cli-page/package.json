@@ -1,0 +1,38 @@
+{
+  "name": "cli-page",
+  "version": "0.0.1",
+  "description": "小程序构建工具页面",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode=production",
+    "preview": "vite preview --mode=stage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanquankun/mint-fe-tools.git"
+  },
+  "keywords": [
+    "mpsc",
+    "cli",
+    "mps",
+    "mpsc-page",
+    "cli-page"
+  ],
+  "author": "yanquankun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yanquankun/mint-fe-tools/issues"
+  },
+  "homepage": "https://github.com/yanquankun/mint-fe-tools#readme",
+  "dependencies": {
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.10"
+  }
+}
