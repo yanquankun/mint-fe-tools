@@ -199,7 +199,7 @@ module.exports = async (answer) => {
       branch: await getBranch(),
       reomte: await getRemote(),
       tag: answer.isCreateTag ? await getCommit() : '',
-      // atUsers: mpsJson.atUsers,
+      atUsers: mpsJson.atUsers || [],
       // prod 提供构建成功小程序的名称
       // dev 版本不需要，直接从qrcode filename 获取
       buildSuccessAppNames: answer.isProd ? buildSuccessAppNames.join(',') : '',
