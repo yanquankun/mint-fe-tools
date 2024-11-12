@@ -3,9 +3,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
+  ::-webkit-scrollbar {
+    width: 6px;
+    background: transparent;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgb(227, 225, 225);
+  }
 }
