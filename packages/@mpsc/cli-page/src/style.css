@@ -13,3 +13,8 @@
     background: rgb(227, 225, 225);
   }
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}

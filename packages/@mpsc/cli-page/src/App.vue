@@ -42,6 +42,12 @@ const logger = ref<InstanceType<typeof Log> | null>(null);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 9999;
+    border-bottom: 1px solid #dcdfe6;
+    margin-bottom: 5px;
 
     &-title {
       font-size: 20px;
