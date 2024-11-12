@@ -1,15 +1,29 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vite.dev/config/
 const defineConfig = ({ mode }) => {
   const isProd = mode === 'production';
+
   return {
     base: '/',
-    plugins: [vue()],
+    plugins: [
+      vue(),
+      //====== ele comp 按需引入 ======
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+      //====== end ======
+    ],
     build: {
       outDir: resolve(__dirname, 'dist'),
-      assetsDir: 'assets',
+      assetsDir: 'vender',
       assetsInlineLimit: 8192,
       cssCodeSplit: false,
       // sourcemap: !isProd,
@@ -23,14 +37,22 @@ const defineConfig = ({ mode }) => {
               return isProd ? 'css/[name]-[hash:10][extname]' : 'css/[name]-[extname]';
             }
 
-            return isProd ? 'assets/[name]-[hash][extname]' : 'assets/[name][extname]';
+            return isProd ? '[name]-[hash][extname]' : '[name][extname]';
+          },
+          manualChunks: (id) => {
+            if (id.indexOf('element-plus') > -1) {
+              return 'element-plus';
+            }
+            if (id.includes('node_modules')) {
+              return 'third_party';
+            }
           },
         },
       },
     },
     resolve: {
       alias: [{ find: /^@\//, replacement: resolve(__dirname, 'src') + '/' }],
-      extensions: ['.ts', '.tsx', '.js', '.mjs', '.vue', '.json', '.less', '.css'],
+      extensions: ['.ts', '.tsx', '.js', '.mjs', '.vue', '.json', '.less', '.css', '.ico'],
     },
     server: {
       port: 8010,
