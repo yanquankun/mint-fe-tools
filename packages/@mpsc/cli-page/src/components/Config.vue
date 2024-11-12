@@ -6,6 +6,7 @@
     label-width="auto"
     style="max-width: 600px"
     status-icon
+    class="config-form"
   >
     <el-form-item prop="desc" label="输入描述">
       <el-input
@@ -44,7 +45,9 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit(configFormRef)">开始构建</el-button>
+      <el-button class="config-form-submit" type="primary" @click="onSubmit(configFormRef)"
+        >开始构建</el-button
+      >
     </el-form-item>
   </el-form>
 </template>
@@ -90,4 +93,11 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
   });
 };
 </script>
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.config-form {
+  &-submit {
+    position: absolute;
+    right: 0;
+  }
+}
+</style>
