@@ -76,7 +76,7 @@ onMounted(() => {
   }
 
   &-time {
-    color: rgb(0, 106, 255);
+    color: rgb(47, 247, 7);
     margin-right: 8px;
   }
 
