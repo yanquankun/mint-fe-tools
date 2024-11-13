@@ -41,7 +41,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Log from './components/Log.vue';
 import Config from './components/Config.vue';
 import Result from './components/Result.vue';
@@ -59,6 +59,19 @@ const clearPage = () => {
     logger.value.clear();
   }
 };
+onMounted(() => {
+  fetch('/api/getMessage', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('服务器返回:', data);
+    })
+    .catch((error) => console.error('请求出错:', error));
+});
 </script>
 <style scoped lang="less">
 .container {

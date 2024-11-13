@@ -60,9 +60,17 @@ const defineConfig = ({ mode }) => {
       open: true,
       proxy: {
         '/api': {
-          target: '',
+          target: 'http://10.253.79.55:3000',
           changeOrigin: true,
           prependPath: false,
+          rewrite: (path) => {
+            !isProd &&
+              console.log(
+                '\x1b[32m%s\x1b[0m',
+                `proxy rewrite: ${path} -> 10.253.79.55:3000${path}`,
+              );
+            return path.replace(/^\/api/, '/api');
+          },
         },
       },
     },
