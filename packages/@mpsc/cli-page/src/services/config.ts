@@ -1,9 +1,10 @@
 interface IConfigForm {
   desc: string;
   version: string;
-  delivery: boolean;
-  type: string[];
-  resource: string;
+  groupNotice: boolean;
+  isProd: boolean;
+  isAutoUpdateQrcode?: boolean;
+  isCreateTag?: boolean;
 }
 
 export type { IConfigForm };

@@ -3,7 +3,7 @@
     ref="configFormRef"
     :model="form"
     :rules="rules"
-    label-width="auto"
+    label-width="200px"
     style="max-width: 600px"
     status-icon
     class="config-form"
@@ -21,30 +21,25 @@
     <el-form-item prop="version" label="输入版本">
       <el-input maxlength="20" placeholder="请输入版本" v-model="form.version" />
     </el-form-item>
-    <!-- <el-form-item label="Activity zone">
-      <el-select v-model="form.region" placeholder="please select your zone">
-        <el-option label="Zone one" value="shanghai" />
-        <el-option label="Zone two" value="beijing" />
-      </el-select>
-    </el-form-item> -->
-    <el-form-item label="Instant delivery">
-      <el-switch v-model="form.delivery" />
+    <el-form-item prop="groupNotice" label="是否发送群通知">
+      <el-switch v-model="form.groupNotice" inline-prompt active-text="是" inactive-text="否" />
     </el-form-item>
-    <el-form-item label="Activity type">
-      <el-checkbox-group v-model="form.type">
-        <el-checkbox value="Online activities" name="type"> Online activities </el-checkbox>
-        <el-checkbox value="Promotion activities" name="type"> Promotion activities </el-checkbox>
-        <el-checkbox value="Offline activities" name="type"> Offline activities </el-checkbox>
-        <el-checkbox value="Simple brand exposure" name="type"> Simple brand exposure </el-checkbox>
-      </el-checkbox-group>
+    <el-form-item prop="isProd" label="是否为发布版本">
+      <el-switch v-model="form.isProd" inline-prompt active-text="是" inactive-text="否" />
     </el-form-item>
-    <el-form-item label="Resources">
-      <el-radio-group v-model="form.resource">
-        <el-radio value="Sponsor">Sponsor</el-radio>
-        <el-radio value="Venue">Venue</el-radio>
-      </el-radio-group>
+    <el-form-item v-if="!form.isProd" prop="isAutoUpdateQrcode" label="是否自动更新本地版二维码 ">
+      <el-switch
+        v-model="form.isAutoUpdateQrcode"
+        inline-prompt
+        active-text="是"
+        inactive-text="否"
+      />
+    </el-form-item>
+    <el-form-item v-if="form.isProd" prop="isCreateTag" label="是否打tag">
+      <el-switch v-model="form.isCreateTag" inline-prompt active-text="是" inactive-text="否" />
     </el-form-item>
     <el-form-item>
+      <el-button class="config-form-clear" @click="emit('clearPage')">清空页面内容</el-button>
       <el-button class="config-form-submit" type="primary" @click="onSubmit(configFormRef)"
         >开始构建</el-button
       >
@@ -53,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import type { ComponentSize, FormInstance, FormRules } from 'element-plus';
+import { reactive, ref, defineEmits } from 'vue';
+import { ElMessage } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import type { IConfigForm } from '@/services/config';
 import { checkVersion } from '@/utils/common';
 
@@ -77,24 +73,33 @@ const rules = reactive<FormRules<IConfigForm>>({
 const form = reactive<IConfigForm>({
   desc: '',
   version: '',
-  delivery: false,
-  type: [],
-  resource: '',
+  groupNotice: false,
+  isProd: false,
+  isAutoUpdateQrcode: false,
+  isCreateTag: false,
 });
+const emit = defineEmits<{
+  clearPage: [];
+  startBuild: [];
+}>();
 
 const onSubmit = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!');
+      emit('startBuild');
     } else {
-      console.log('error submit!', fields);
+      ElMessage.warning('请完善表单信息!');
     }
   });
 };
 </script>
 <style scoped lang="less">
 .config-form {
+  &-clear {
+    position: absolute;
+    right: 100px;
+  }
   &-submit {
     position: absolute;
     right: 0;

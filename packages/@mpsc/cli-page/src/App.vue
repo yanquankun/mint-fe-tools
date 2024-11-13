@@ -2,7 +2,13 @@
   <div class="container">
     <el-container>
       <el-header height="50px" class="container-header">
-        <div class="container-header-title">小程序 ci 构建脚手架工具</div>
+        <div class="container-header-title">
+          <span>小程序 ci 构建脚手架工具</span>
+          <span class="container-header-title-line">|</span>
+          <span class="container-header-title-extra">0.0.1</span>
+          <span class="container-header-title-line">|</span>
+          <span class="container-header-title-extra">banma_mp</span>
+        </div>
         <div class="container-header-operations">
           <el-link
             type="primary"
@@ -20,7 +26,7 @@
       </el-header>
       <el-divider content-position="left" border-style="dashed">构建选项</el-divider>
       <el-main class="container-config">
-        <Config />
+        <Config @startBuild="startBuild" @clearPage="clearPage" />
       </el-main>
       <el-divider content-position="left" border-style="dashed">输出日志</el-divider>
       <el-main class="container-log">
@@ -35,6 +41,17 @@ import Log from './components/Log.vue';
 import Config from './components/Config.vue';
 
 const logger = ref<InstanceType<typeof Log> | null>(null);
+
+const startBuild = () => {
+  if (logger.value) {
+    logger.value.startWatch();
+  }
+};
+const clearPage = () => {
+  if (logger.value) {
+    logger.value.clear();
+  }
+};
 </script>
 <style scoped lang="less">
 .container {
@@ -51,6 +68,20 @@ const logger = ref<InstanceType<typeof Log> | null>(null);
 
     &-title {
       font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &-line {
+        margin: 0 5px;
+        color: #ccc;
+        font-size: 13px;
+      }
+
+      &-extra {
+        font-size: 18px;
+        color: #1e1f1e;
+      }
     }
 
     &-operations {

@@ -2,7 +2,7 @@
   <div class="logger-ui">
     <div class="logger-output" ref="logOutput">
       <p v-for="(log, index) in logs" :key="index">
-        <span class="logger-output-time">{{ new Date().toLocaleTimeString() }}</span>
+        <span class="logger-output-time">{{ log.time }}</span>
         <span :class="logMap[log.level]">{{ log.message }}</span>
       </p>
     </div>
@@ -14,7 +14,7 @@ import { LogLevel } from '@/services/log';
 import type { ILog } from '@/services/log';
 
 const logOutput = ref<HTMLElement | null>(null);
-const logs = ref<{ level: LogLevel; message: string }[]>([]);
+const logs = ref<{ level: LogLevel; message: string; time: string }[]>([]);
 const logMap = {
   [LogLevel.INFO]: 'logger-output-info',
   [LogLevel.WARN]: 'logger-output-warn',
@@ -23,26 +23,28 @@ const logMap = {
 };
 
 //====== output ======
-const log = (log: ILog) => {
-  logs.value.push({
-    level: LogLevel.INFO,
-    message: log.message,
-  });
-  scrollToBottom();
-};
 const startWatch = () => {
   log({ level: LogLevel.INFO, message: '开始监听构建日志' });
 };
 const clear = () => {
-  logs.value = [{ level: LogLevel.INFO, message: '小程序构建日志监控' }];
+  logs.value = [
+    { time: new Date().toLocaleTimeString(), level: LogLevel.INFO, message: '小程序构建日志监控' },
+  ];
 };
 defineExpose({
-  log,
   clear,
   startWatch,
 });
 //====== output end ======
 
+const log = (log: ILog) => {
+  logs.value.push({
+    time: new Date().toLocaleTimeString(),
+    level: log.level,
+    message: log.message,
+  });
+  scrollToBottom();
+};
 const scrollToBottom = async () => {
   await nextTick();
   if (logOutput.value) {
