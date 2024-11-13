@@ -24,14 +24,19 @@
           >
         </div>
       </el-header>
-      <el-divider content-position="left" border-style="dashed">构建选项</el-divider>
-      <el-main class="container-config">
-        <Config @startBuild="startBuild" @clearPage="clearPage" />
-      </el-main>
-      <el-divider content-position="left" border-style="dashed">输出日志</el-divider>
-      <el-main class="container-log">
-        <Log ref="logger" />
-      </el-main>
+      <div v-if="!id">
+        <el-divider content-position="left" border-style="dashed">构建选项</el-divider>
+        <el-main class="container-config">
+          <Config @startBuild="startBuild" @clearPage="clearPage" />
+        </el-main>
+        <el-divider content-position="left" border-style="dashed">输出日志</el-divider>
+        <el-main class="container-log">
+          <Log ref="logger" />
+        </el-main>
+      </div>
+      <div class="container-result" v-else>
+        <Result />
+      </div>
     </el-container>
   </div>
 </template>
@@ -39,7 +44,9 @@
 import { ref } from 'vue';
 import Log from './components/Log.vue';
 import Config from './components/Config.vue';
+import Result from './components/Result.vue';
 
+const id = new URLSearchParams(location.search).get('id') || '';
 const logger = ref<InstanceType<typeof Log> | null>(null);
 
 const startBuild = () => {
@@ -92,10 +99,8 @@ const clearPage = () => {
     }
   }
 
-  &-config {
-  }
-
-  &-log {
+  &-result {
+    padding: 20px;
   }
 }
 </style>

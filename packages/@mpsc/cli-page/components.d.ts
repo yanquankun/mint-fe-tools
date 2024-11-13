@@ -16,6 +16,7 @@ declare module 'vue' {
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDivider: typeof import('element-plus/es')['ElDivider']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElHeader: typeof import('element-plus/es')['ElHeader']
@@ -30,5 +31,9 @@ declare module 'vue' {
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Log: typeof import('./src/components/Log.vue')['default']
+    Result: typeof import('./src/components/Result.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
