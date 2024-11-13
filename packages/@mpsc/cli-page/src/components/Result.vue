@@ -5,7 +5,8 @@
     element-loading-background="rgba(122, 122, 122, 0.4)"
     class="container"
   >
-    <el-empty description="暂无数据" />
+    <el-empty v-if="!result?.length" description="暂无数据" />
+    <div class="container-qrcode" v-else></div>
   </div>
 </template>
 <script setup lang="ts">
