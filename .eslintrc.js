@@ -20,6 +20,7 @@ module.exports = {
     '.nx/*',
     '.yarn/*',
     'packages/@mpsc/cli/template/**',
+    'packages/@mpsc/cli/static/**',
     'packages/@mpsc/cli-lbg/templates/**',
   ],
   rules: {

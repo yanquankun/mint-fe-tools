@@ -1,0 +1,103 @@
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+const { getLocalIP } = require('../utils/common');
+const _log = require('../utils/logger');
+const { getPathAbsoluteRoot } = require('../utils/file');
+const path = require('path');
+
+const hostIP = getLocalIP();
+const port = 3000;
+let message = '',
+  server;
+
+const createHttpServer = function () {
+  try {
+    server = http.createServer((req, res) => {
+      console.log(req.method, req.url);
+      if (req.method === 'GET' && req.url === `/${globalThis['projectName']}`) {
+        const filePath = getPathAbsoluteRoot('static/index.html');
+        fs.readFile(filePath, 'utf8', (err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+            res.end('服务器内部错误');
+          } else {
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+            res.end(data);
+          }
+        });
+      } else if (req.method === 'GET' && req.url.startsWith('/static/')) {
+        const filePath = getPathAbsoluteRoot(req.url);
+        const ext = path.extname(filePath);
+        fs.readFile(filePath, 'utf8', (err, data) => {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+            res.end('服务器内部错误');
+          } else {
+            res.writeHead(200, { 'Content-Type': `text/${ext === '.js' ? 'javascript' : 'css'}` });
+            res.end(data);
+          }
+        });
+      } else if (req.method === 'POST' || req.method === 'GET') {
+        if (req.url == '/api/message') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk;
+          });
+          req.on('end', () => {
+            console.log('收到消息:', body);
+            res.writeHead(200, {
+              'Content-Type': 'application/json; charset=utf-8',
+            });
+            const response = JSON.stringify({
+              message: 'Message received successfully!',
+            });
+            message = response;
+            res.end(response);
+          });
+        }
+        if (req.url == '/api/getMessage') {
+          const queryObject = url.parse(req.url, true).query;
+
+          console.log('收到参数:', queryObject);
+          console.log('发送消息：', message || { data: '' });
+
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(message || JSON.stringify({ data: '' }));
+        }
+      } else {
+        console.log(1111);
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Not Found');
+      }
+    });
+
+    startHttpWatch();
+  } catch (e) {
+    _log.error(e, 'createServer');
+  }
+};
+
+const startHttpWatch = function () {
+  if (!server) return;
+
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      _log.error('服务地址已被占用，请检查并关掉其他服务', 'createServer');
+    } else {
+      _log.error(e, 'createServer');
+    }
+  });
+
+  server.listen(port, hostIP, () => {
+    _log.info(
+      `开启服务，访问 ${_log.chalk.blue(`http://${hostIP}:${port}/${globalThis['projectName']} `)}`,
+      'createServer',
+    );
+    _log.warn(`在局域网内其他设备可以访问此页面【使用期间请不要关闭该窗口】`, 'createServer');
+  });
+};
+
+module.exports = () => {
+  createHttpServer();
+};

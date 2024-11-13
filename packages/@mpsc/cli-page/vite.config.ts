@@ -9,7 +9,7 @@ const defineConfig = ({ mode }) => {
   const isProd = mode === 'production';
 
   return {
-    base: '/',
+    base: '/static/',
     plugins: [
       vue(),
       //====== ele comp 按需引入 ======

@@ -6,6 +6,7 @@ const { loadLocalModule } = require('../lib/module');
 const _log = require('../utils/logger');
 const { isFunction } = require('../utils/type');
 const git = require('../tools/git');
+const path = require('path');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -109,6 +110,22 @@ program
         });
     } catch (e) {
       _log.error(e, 'build');
+    }
+  });
+
+program
+  .command('server')
+  .description('启动脚手架可视化页面')
+  .action(async () => {
+    _log.info('开始启动脚手架可视化页面', 'server');
+    try {
+      globalThis['version'] = version;
+      globalThis['projectName'] = path.basename(process.cwd());
+
+      const fn = await loadLocalModule('../command/server.js');
+      isFunction(fn) && fn();
+    } catch (e) {
+      _log.error(e, 'server');
     }
   });
 

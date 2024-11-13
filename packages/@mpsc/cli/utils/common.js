@@ -1,3 +1,5 @@
+const os = require('os');
+
 const timestampToTime = (timestamp) => {
   timestamp = timestamp ? timestamp : null;
   const date = new Date(timestamp);
@@ -15,7 +17,22 @@ const checkVersion = (version) => {
   return versionRegex.test(version);
 };
 
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+
+  for (const interfaceName in interfaces) {
+    const iface = interfaces[interfaceName];
+    for (const alias of iface) {
+      if (alias.family === 'IPv4' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
+
 module.exports = {
   timestampToTime,
   checkVersion,
+  getLocalIP,
 };
