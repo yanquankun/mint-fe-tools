@@ -1,3 +1,4 @@
 packages/@mpsc/cli/template/**
 packages/@mpsc/cli-lbg/templates/**
+packages/@mpsc/cli-lbg/static/**
 /.nx/workspace-data
