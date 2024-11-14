@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import { createHtmlPlugin } from 'vite-plugin-html';
 
 // https://vite.dev/config/
 const defineConfig = ({ mode }) => {
@@ -20,14 +21,18 @@ const defineConfig = ({ mode }) => {
         resolvers: [ElementPlusResolver()],
       }),
       //====== end ======
+      createHtmlPlugin({
+        minify: true, // 开启 HTML 压缩
+      }),
     ],
     build: {
       outDir: resolve(__dirname, 'dist'),
       assetsDir: 'vender',
       assetsInlineLimit: 8192,
       cssCodeSplit: false,
-      // sourcemap: !isProd,
+      sourcemap: !isProd,
       emptyOutDir: true,
+      minify: 'terser',
       rollupOptions: {
         input: resolve(__dirname, 'index.html'),
         output: {
