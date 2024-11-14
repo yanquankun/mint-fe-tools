@@ -14,7 +14,6 @@ let message = '',
 const createHttpServer = function () {
   try {
     server = http.createServer((req, res) => {
-      console.log(req.method, req.url);
       if (req.method === 'GET' && req.url === `/${globalThis['projectName']}`) {
         const filePath = getPathAbsoluteRoot('static/index.html');
         fs.readFile(filePath, 'utf8', (err, data) => {
@@ -29,12 +28,25 @@ const createHttpServer = function () {
       } else if (req.method === 'GET' && req.url.startsWith('/static/')) {
         const filePath = getPathAbsoluteRoot(req.url);
         const ext = path.extname(filePath);
-        fs.readFile(filePath, 'utf8', (err, data) => {
+
+        const mimeTypes = {
+          '.html': 'text/html',
+          '.css': 'text/css',
+          '.js': 'application/javascript',
+          '.json': 'application/json',
+          '.png': 'image/png',
+          '.jpg': 'image/jpeg',
+          '.gif': 'image/gif',
+          '.svg': 'image/svg+xml',
+          '.ico': 'image/x-icon',
+        };
+        const contentType = mimeTypes[ext];
+        fs.readFile(filePath, (err, data) => {
           if (err) {
             res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
             res.end('服务器内部错误');
           } else {
-            res.writeHead(200, { 'Content-Type': `text/${ext === '.js' ? 'javascript' : 'css'}` });
+            res.writeHead(200, { 'Content-Type': contentType });
             res.end(data);
           }
         });
