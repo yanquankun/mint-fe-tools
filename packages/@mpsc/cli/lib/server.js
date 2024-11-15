@@ -13,10 +13,30 @@ const port = mpsJson.port || 3000;
 let message = '',
   server;
 
-const createHttpServer = function () {
+const startHttpWatch = function () {
+  if (!server) return;
+
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      _log.error('服务地址已被占用，请检查并关掉其他服务', 'createServer');
+    } else {
+      _log.error(e, 'createServer');
+    }
+  });
+
+  server.listen(port, hostIP, () => {
+    _log.info(
+      `开启服务，访问 ${_log.chalk.blue(`http://${hostIP}:${port}/${process.env.projectName} `)}`,
+      'createServer',
+    );
+    _log.warn(`在局域网内其他设备可以访问此页面【使用期间请不要关闭该窗口】`, 'createServer');
+  });
+};
+
+!(function () {
   try {
     server = http.createServer((req, res) => {
-      if (req.method === 'GET' && req.url === `/${globalThis['projectName']}`) {
+      if (req.method === 'GET' && req.url === `/${process.env.projectName}`) {
         const filePath = getPathAbsoluteRoot('static/index.html');
         fs.readFile(filePath, 'utf8', (err, data) => {
           if (err) {
@@ -87,8 +107,8 @@ const createHttpServer = function () {
                 code: 0,
                 msg: 'success',
                 data: {
-                  projectName: globalThis['projectName'],
-                  version: globalThis['version'],
+                  projectName: process.env.projectName,
+                  version: process.env.version,
                 },
               }),
           );
@@ -103,28 +123,4 @@ const createHttpServer = function () {
   } catch (e) {
     _log.error(e, 'createServer');
   }
-};
-
-const startHttpWatch = function () {
-  if (!server) return;
-
-  server.on('error', (e) => {
-    if (e.code === 'EADDRINUSE') {
-      _log.error('服务地址已被占用，请检查并关掉其他服务', 'createServer');
-    } else {
-      _log.error(e, 'createServer');
-    }
-  });
-
-  server.listen(port, hostIP, () => {
-    _log.info(
-      `开启服务，访问 ${_log.chalk.blue(`http://${hostIP}:${port}/${globalThis['projectName']} `)}`,
-      'createServer',
-    );
-    _log.warn(`在局域网内其他设备可以访问此页面【使用期间请不要关闭该窗口】`, 'createServer');
-  });
-};
-
-module.exports = () => {
-  createHttpServer();
-};
+})();

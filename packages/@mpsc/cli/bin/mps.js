@@ -7,6 +7,7 @@ const _log = require('../utils/logger');
 const { isFunction } = require('../utils/type');
 const git = require('../tools/git');
 const path = require('path');
+const execa = require('execa');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -116,14 +117,30 @@ program
 program
   .command('server')
   .description('启动脚手架可视化页面')
-  .action(async () => {
+  .option('-w, --watch', '本地服务监控模式，生产环境不要使用此模式')
+  .action(async (name) => {
     _log.info('开始启动脚手架可视化页面', 'server');
     try {
-      globalThis['version'] = version;
-      globalThis['projectName'] = path.basename(process.cwd());
+      process.env.version = version;
+      process.env.projectName = path.basename(process.cwd());
 
-      const fn = await loadLocalModule('../command/server.js');
-      isFunction(fn) && fn();
+      if (name.watch) {
+        await execa('npx', ['nodemon'], {
+          cwd: path.resolve(__dirname, '../'),
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+          },
+        });
+      } else {
+        await execa('node', ['lib/server.js'], {
+          cwd: path.resolve(__dirname, '../'),
+          stdio: 'inherit',
+          env: {
+            ...process.env,
+          },
+        });
+      }
     } catch (e) {
       _log.error(e, 'server');
     }

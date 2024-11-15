@@ -51,7 +51,8 @@
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "cmd-shim": "^4.1.0"
+    "cmd-shim": "^4.1.0",
+    "nodemon": "^3.1.7"
   },
   "engines": {
     "node": ">= 14.0.0"
