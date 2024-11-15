@@ -95,9 +95,10 @@
 |---------prePagePath 启动路径[不填则以微信规则为主] 非必填  
 |----atUsers 构建完成后，在 noticeHook 中进行透传，可执行@相关方 非必填
 |----projectPath 项目构建产物路径[`不填默认从 cmd 执行目录中查找 project.config.json，如你的小程序产物是在 dist 目录中，可设置为 dist`] 非必填
-|----branchWhiteList 当发布为线上版的时候，需要在此列表中的分支才可发布[`不填默认 master`] 非必填  
+|----branchs 当发布为线上版的时候，需要在此列表中的分支才可发布[`不填默认 master`] 非必填  
 |----manager 包管理工具[`脚手架会帮你自动注入`] 必填  
-|----buildCommand 构建指令[`无需填写全部，如构建指令为 npm run build，则只需要填写 run 后的部分即可`] 必填
+|----command 构建指令[`无需填写全部，如构建指令为 npm run build，则只需要填写 run 后的部分即可`] 必填
+|----port web 服务端口号，不填默认 3000【多个项目需要配置不同的端口号避免冲突】 非必填
 
 ### Hooks
 

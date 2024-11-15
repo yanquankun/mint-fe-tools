@@ -26,7 +26,7 @@ const defineConfig = ({ mode }) => {
       }),
     ],
     build: {
-      outDir: resolve(__dirname, 'dist'),
+      outDir: resolve(__dirname, '../cli/static'),
       assetsDir: 'vender',
       assetsInlineLimit: 8192,
       cssCodeSplit: false,

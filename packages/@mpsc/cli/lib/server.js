@@ -5,9 +5,11 @@ const { getLocalIP } = require('../utils/common');
 const _log = require('../utils/logger');
 const { getPathAbsoluteRoot } = require('../utils/file');
 const path = require('path');
+const { getMpsAppJson } = require('./../tools/getProjectJson');
 
 const hostIP = getLocalIP();
-const port = 3000;
+const mpsJson = getMpsAppJson();
+const port = mpsJson.port || 3000;
 let message = '',
   server;
 
@@ -77,8 +79,21 @@ const createHttpServer = function () {
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(message || JSON.stringify({ data: '' }));
         }
+        if (req.url == '/api/getBaseInfo') {
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(
+            message ||
+              JSON.stringify({
+                code: 0,
+                msg: 'success',
+                data: {
+                  projectName: globalThis['projectName'],
+                  version: globalThis['version'],
+                },
+              }),
+          );
+        }
       } else {
-        console.log(1111);
         res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
         res.end('Not Found');
       }

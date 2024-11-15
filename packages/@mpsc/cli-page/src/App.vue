@@ -5,9 +5,9 @@
         <div class="container-header-title">
           <span>小程序 ci 构建脚手架工具</span>
           <span class="container-header-title-line">|</span>
-          <span class="container-header-title-extra">0.0.1</span>
+          <span class="container-header-title-extra">{{ baseInfo.version }}</span>
           <span class="container-header-title-line">|</span>
-          <span class="container-header-title-extra">banma_mp</span>
+          <span class="container-header-title-extra">{{ baseInfo.projectName }}</span>
         </div>
         <div class="container-header-operations">
           <el-link
@@ -45,9 +45,17 @@ import { ref, onMounted } from 'vue';
 import Log from './components/Log.vue';
 import Config from './components/Config.vue';
 import Result from './components/Result.vue';
+import { ElMessage } from 'element-plus';
 
 const id = new URLSearchParams(location.search).get('id') || '';
 const logger = ref<InstanceType<typeof Log> | null>(null);
+const baseInfo = ref<{
+  version: string;
+  projectName: string;
+}>({
+  version: '',
+  projectName: '',
+});
 
 const startBuild = () => {
   if (logger.value) {
@@ -60,15 +68,18 @@ const clearPage = () => {
   }
 };
 onMounted(() => {
-  fetch('/api/getMessage', {
+  fetch('/api/getBaseInfo', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log('服务器返回:', data);
+    .then((response) => {
+      if (response.code !== 0) {
+        ElMessage.error(response.message);
+      }
+      baseInfo.value = { ...response.data };
     })
     .catch((error) => console.error('请求出错:', error));
 });

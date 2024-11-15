@@ -16,5 +16,6 @@
   <% } -%>"projectPath": "dist",
   "branchs": ["master"],
   "manager": "<%= packageManage %>",
-  "command": "build:weapp"
+  "command": "build:weapp",
+  "port": "服务端口号，默认3000"
 }
