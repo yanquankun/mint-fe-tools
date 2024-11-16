@@ -41,6 +41,10 @@
 
 - `npm i @mpsc/cli -g`
 
+### open server dev env
+
+- cmd `mpsc server -- nodemon`
+
 ### mpsc command
 
 ![mpsc](https://www.yanquankun.com:9300/cdn/mpsc/mpsc%E6%8C%87%E4%BB%A4.png 'Magic Gardens')

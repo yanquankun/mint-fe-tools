@@ -8,6 +8,7 @@ const { isFunction } = require('../utils/type');
 const git = require('../tools/git');
 const path = require('path');
 const execa = require('execa');
+const minimist = require('minimist');
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -117,14 +118,15 @@ program
 program
   .command('server')
   .description('启动脚手架可视化页面')
-  .option('-w, --watch', '本地服务监控模式，生产环境不要使用此模式')
-  .action(async (name) => {
+  .action(async () => {
     _log.info('开始启动脚手架可视化页面', 'server');
+    const args = minimist(process.argv.slice(2), { '--': true });
+
     try {
       process.env.version = version;
       process.env.projectName = path.basename(process.cwd());
 
-      if (name.watch) {
+      if (args['--'] && args['--'].includes('nodemon')) {
         await execa('npx', ['nodemon'], {
           cwd: path.resolve(__dirname, '../'),
           stdio: 'inherit',
