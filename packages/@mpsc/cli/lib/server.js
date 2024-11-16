@@ -1,17 +1,19 @@
 const http = require('http');
-const fs = require('fs');
-const url = require('url');
 const { getLocalIP } = require('../utils/common');
 const _log = require('../utils/logger');
 const { getPathAbsoluteRoot } = require('../utils/file');
-const path = require('path');
 const { getMpsAppJson } = require('./../tools/getProjectJson');
+const {
+  registerStaticRequest,
+  registerWebRouteRequest,
+  registerHttpError,
+  apis,
+} = require('./http');
 
 const hostIP = getLocalIP();
 const mpsJson = getMpsAppJson();
 const port = mpsJson.port || 3000;
-let message = '',
-  server;
+let server;
 
 const startHttpWatch = function () {
   if (!server) return;
@@ -36,86 +38,25 @@ const startHttpWatch = function () {
 !(function () {
   try {
     server = http.createServer((req, res) => {
-      if (req.method === 'GET' && req.url === `/${process.env.projectName}`) {
-        const filePath = getPathAbsoluteRoot('static/index.html');
-        fs.readFile(filePath, 'utf8', (err, data) => {
-          if (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-            res.end('服务器内部错误');
-          } else {
-            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-            res.end(data);
-          }
+      if (req.url === `/${process.env.projectName}`) {
+        registerWebRouteRequest({
+          res,
+          filePath: getPathAbsoluteRoot('static/index.html'),
         });
-      } else if (req.method === 'GET' && req.url.startsWith('/static/')) {
-        const filePath = getPathAbsoluteRoot(req.url);
-        const ext = path.extname(filePath);
-
-        const mimeTypes = {
-          '.html': 'text/html',
-          '.css': 'text/css',
-          '.js': 'application/javascript',
-          '.json': 'application/json',
-          '.png': 'image/png',
-          '.jpg': 'image/jpeg',
-          '.gif': 'image/gif',
-          '.svg': 'image/svg+xml',
-          '.ico': 'image/x-icon',
-        };
-        const contentType = mimeTypes[ext];
-        fs.readFile(filePath, (err, data) => {
-          if (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-            res.end('服务器内部错误');
-          } else {
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(data);
-          }
-        });
-      } else if (req.method === 'POST' || req.method === 'GET') {
-        if (req.url == '/api/message') {
-          let body = '';
-          req.on('data', (chunk) => {
-            body += chunk;
-          });
-          req.on('end', () => {
-            console.log('收到消息:', body);
-            res.writeHead(200, {
-              'Content-Type': 'application/json; charset=utf-8',
-            });
-            const response = JSON.stringify({
-              message: 'Message received successfully!',
-            });
-            message = response;
-            res.end(response);
-          });
-        }
-        if (req.url == '/api/getMessage') {
-          const queryObject = url.parse(req.url, true).query;
-
-          console.log('收到参数:', queryObject);
-          console.log('发送消息：', message || { data: '' });
-
-          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-          res.end(message || JSON.stringify({ data: '' }));
-        }
-        if (req.url == '/api/getBaseInfo') {
-          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-          res.end(
-            message ||
-              JSON.stringify({
-                code: 0,
-                msg: 'success',
-                data: {
-                  projectName: process.env.projectName,
-                  version: process.env.version,
-                },
-              }),
-          );
-        }
+      } else if (req.url.startsWith('/static/')) {
+        registerStaticRequest({ res, req });
       } else {
-        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end('Not Found');
+        const apiUrl = req.url.match(/^\/api\/[^?]*/)[0];
+
+        if (apis[apiUrl]) {
+          apis[apiUrl]({ req, res });
+        } else
+          registerHttpError({
+            req,
+            res,
+            code: 404,
+            msg: `${req.url} Not Found，请联系yanquankun！`,
+          });
       }
     });
 

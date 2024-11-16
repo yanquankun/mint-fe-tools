@@ -82,6 +82,22 @@ onMounted(() => {
       baseInfo.value = { ...response.data };
     })
     .catch((error) => console.error('请求出错:', error));
+
+  fetch('/api/message', {
+    method: 'POST',
+    body: JSON.stringify({ a: 1 }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.code !== 0) {
+        ElMessage.error(response.message);
+      }
+      console.log(response);
+    })
+    .catch((error) => console.error('请求出错:', error));
 });
 </script>
 <style scoped lang="less">
