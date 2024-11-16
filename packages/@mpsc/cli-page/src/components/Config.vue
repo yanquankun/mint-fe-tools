@@ -80,14 +80,20 @@ const form = reactive<IConfigForm>({
 });
 const emit = defineEmits<{
   clearPage: [];
-  startBuild: [];
+  startBuild: [form: IConfigForm];
 }>();
 
 const onSubmit = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     if (valid) {
-      emit('startBuild');
+      if (form.isProd) {
+        Reflect.deleteProperty(form, 'isAutoUpdateQrcode');
+      }
+      if (!form.isProd) {
+        Reflect.deleteProperty(form, 'isCreateTag');
+      }
+      emit('startBuild', form);
     } else {
       ElMessage.warning('请完善表单信息!');
     }

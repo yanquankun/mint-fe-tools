@@ -24,6 +24,7 @@ const logMap = {
 
 //====== output ======
 const startWatch = () => {
+  logs.value = logs.value.slice(0, 1);
   log({ level: LogLevel.INFO, message: '开始监听构建日志' });
 };
 const clear = () => {

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { getPathAbsoluteRoot } = require('../utils/file');
 const _log = require('../utils/logger');
+// const url = require('url');
 
 const mimeTypes = {
   '.html': 'text/html',
@@ -77,7 +78,7 @@ const postMessage = ({ req, res }) => {
   });
   req.on('end', () => {
     const params = parseBodyParam(req.headers['content-type'], body);
-    console.log('POST 数据:', params.a);
+    _log.info(`${req.url} 请求参数: ${JSON.stringify(params)}`, 'HTTP');
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
     });
@@ -101,6 +102,26 @@ const getBaseInfo = ({ res }) => {
   res.end(response);
 };
 
+const postBuildInfo = ({ req, res }) => {
+  let body = '';
+  req.on('data', (chunk) => {
+    body += chunk.toString();
+  });
+  req.on('end', () => {
+    const params = parseBodyParam(req.headers['content-type'], body);
+    _log.info(`${req.url} 请求参数: ${JSON.stringify(params)}`, 'HTTP');
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+    });
+    const response = createResponse({
+      data: {
+        message: 'Message received successfully!',
+      },
+    });
+    res.end(response);
+  });
+};
+
 module.exports = {
   registerStaticRequest,
   registerWebRouteRequest,
@@ -108,5 +129,6 @@ module.exports = {
   apis: {
     '/api/message': postMessage,
     '/api/getBaseInfo': getBaseInfo,
+    '/api/postBuildInfo': postBuildInfo,
   },
 };

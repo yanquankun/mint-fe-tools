@@ -46,6 +46,8 @@ import Log from './components/Log.vue';
 import Config from './components/Config.vue';
 import Result from './components/Result.vue';
 import { ElMessage } from 'element-plus';
+import { getBaseInfo, postBuildInfo } from '@/services/fetch';
+import type { IConfigForm } from '@/services/config';
 
 const id = new URLSearchParams(location.search).get('id') || '';
 const logger = ref<InstanceType<typeof Log> | null>(null);
@@ -57,47 +59,31 @@ const baseInfo = ref<{
   projectName: '',
 });
 
-const startBuild = () => {
-  if (logger.value) {
-    logger.value.startWatch();
-  }
+const startBuild = (form: IConfigForm) => {
+  postBuildInfo(form).then((response) => {
+    if (response.code !== 0) {
+      return ElMessage.error(response.message);
+    }
+    if (logger.value) {
+      logger.value.startWatch();
+    }
+  });
 };
 const clearPage = () => {
   if (logger.value) {
     logger.value.clear();
   }
 };
+const setBaseInfo = () => {
+  getBaseInfo().then((response) => {
+    if (response.code !== 0) {
+      return ElMessage.error(response.message);
+    }
+    baseInfo.value = { ...response.data };
+  });
+};
 onMounted(() => {
-  fetch('/api/getBaseInfo', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.code !== 0) {
-        ElMessage.error(response.message);
-      }
-      baseInfo.value = { ...response.data };
-    })
-    .catch((error) => console.error('请求出错:', error));
-
-  fetch('/api/message', {
-    method: 'POST',
-    body: JSON.stringify({ a: 1 }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.code !== 0) {
-        ElMessage.error(response.message);
-      }
-      console.log(response);
-    })
-    .catch((error) => console.error('请求出错:', error));
+  setBaseInfo();
 });
 </script>
 <style scoped lang="less">
