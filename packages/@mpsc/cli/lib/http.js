@@ -71,23 +71,25 @@ const parseBodyParam = (contentType, body) => {
   return parsedData;
 };
 
+let postMessageEvent;
+const sendEvent = (data) => {
+  postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n\n`);
+};
+const interval = setInterval(() => {
+  const now = new Date();
+  sendEvent({ message: 'Hello, Client!', time: now.toISOString() });
+}, 3000);
 const postMessage = ({ req, res }) => {
-  let body = '';
-  req.on('data', (chunk) => {
-    body += chunk.toString();
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    Connection: 'keep-alive',
   });
-  req.on('end', () => {
-    const params = parseBodyParam(req.headers['content-type'], body);
-    _log.info(`${req.url} 请求参数: ${JSON.stringify(params)}`, 'HTTP');
-    res.writeHead(200, {
-      'Content-Type': 'application/json; charset=utf-8',
-    });
-    const response = createResponse({
-      data: {
-        message: 'Message received successfully!',
-      },
-    });
-    res.end(response);
+  postMessageEvent = res;
+
+  req.on('close', () => {
+    clearInterval(interval);
+    res.end();
   });
 };
 
@@ -126,6 +128,7 @@ module.exports = {
   registerStaticRequest,
   registerWebRouteRequest,
   registerHttpError,
+  postMessageEvent,
   apis: {
     '/api/message': postMessage,
     '/api/getBaseInfo': getBaseInfo,

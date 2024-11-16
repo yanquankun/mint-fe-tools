@@ -12,6 +12,7 @@
 import { ref, nextTick, defineExpose, onMounted } from 'vue';
 import { LogLevel } from '@/services/log';
 import type { ILog } from '@/services/log';
+import { ElMessage } from 'element-plus';
 
 const logOutput = ref<HTMLElement | null>(null);
 const logs = ref<{ level: LogLevel; message: string; time: string }[]>([]);
@@ -52,8 +53,21 @@ const scrollToBottom = async () => {
     logOutput.value.scrollTop = logOutput.value.scrollHeight;
   }
 };
+const listen = () => {
+  const eventSource = new EventSource('/api/message');
+
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    log({ level: LogLevel.INFO, message: data });
+  };
+
+  eventSource.onerror = () => {
+    ElMessage.error('监听构建日志失败');
+  };
+};
 onMounted(() => {
   log({ level: LogLevel.INFO, message: '小程序构建日志监控' });
+  listen();
 });
 </script>
 <style scoped lang="less">
