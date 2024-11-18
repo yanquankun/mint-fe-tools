@@ -77,6 +77,7 @@ const setBaseInfo = () => {
     baseInfo.value = { ...response.data };
   });
 };
+
 onMounted(() => {
   setBaseInfo();
 });

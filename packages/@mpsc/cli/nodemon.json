@@ -1,6 +1,4 @@
 {
-  "watch": ["lib/server.js", "lib/http.js"],
   "ext": "js,json",
-  "ignore": ["node_modules"],
-  "exec": "node lib/server.js"
+  "ignore": ["node_modules"]
 }

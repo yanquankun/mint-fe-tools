@@ -3,7 +3,10 @@
     <div class="logger-output" ref="logOutput">
       <p v-for="(log, index) in logs" :key="index">
         <span class="logger-output-time">{{ log.time }}</span>
-        <span :class="logMap[log.level]">{{ log.message }}</span>
+        <span v-if="log.level !== LogLevel.LINK" :class="logMap[log.level]">{{ log.message }}</span>
+        <a v-else :href="log.message" target="_blank" :class="logMap[log.level]"
+          >构建完成，点击 {{ log.message }} 查看构建结果</a
+        >
       </p>
     </div>
   </div>
@@ -24,6 +27,7 @@ const logMap = {
   [LogLevel.ERROR]: 'logger-output-error',
   [LogLevel.DONE]: 'logger-output-done',
   [LogLevel.LOG]: 'logger-output-log',
+  [LogLevel.LINK]: 'logger-output-link',
 };
 let eventSource: EventSource | null = null;
 
@@ -82,7 +86,9 @@ const listen = (buildInfo: IConfigForm) => {
   eventSource.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
-      log({ level: data.level, message: data.message });
+      if (data.buildStatus === 'done') {
+        log({ level: LogLevel.LINK, message: data.url });
+      } else log({ level: data.level, message: data.message });
     } catch (error) {
       console.error('本条日志接收失败，原因：', error);
     }
@@ -149,6 +155,12 @@ onUnmounted(() => {
 
   &-log {
     color: #dcdcdc;
+  }
+
+  &-link {
+    color: rgb(47, 247, 7);
+    text-decoration: underline;
+    cursor: pointer;
   }
 }
 </style>

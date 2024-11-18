@@ -3,8 +3,16 @@ const path = require('path');
 const { getPathAbsoluteRoot } = require('../utils/file');
 const _log = require('../utils/logger');
 const buildMp = require('../tools/buildMp');
+const url = require('url');
+const { getLocalIP } = require('../utils/common');
+const { getMpsAppJson } = require('./../tools/getProjectJson');
+
+const hostIP = getLocalIP();
+const mpsJson = getMpsAppJson();
+const port = mpsJson.port || 3000;
+
 let postMessageEvent;
-// const url = require('url');
+const qrcodeMap = new Map();
 
 const mimeTypes = {
   '.html': 'text/html',
@@ -102,6 +110,19 @@ const getBaseInfo = ({ res }) => {
   res.end(response);
 };
 
+const getQrcode = ({ req, res }) => {
+  const parsedUrl = url.parse(req.url, true);
+  const query = parsedUrl.query;
+  const taskId = query.id;
+  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+
+  const qrcode = qrcodeMap.get(taskId);
+  const response = createResponse({
+    data: qrcode ? qrcode : null,
+  });
+  res.end(response);
+};
+
 const postBuildInfo = ({ req, res }) => {
   let body = '';
   req.on('data', (chunk) => {
@@ -118,7 +139,7 @@ const postBuildInfo = ({ req, res }) => {
         message: 'build start',
       },
     });
-    buildMp(params, process.env.cwd);
+    buildMp(params, true);
     res.end(response);
   });
 };
@@ -128,9 +149,15 @@ module.exports = {
   registerWebRouteRequest,
   registerHttpError,
   sendMessage,
+  qrcodeMap,
+  serverInfo: {
+    hostIP,
+    port,
+  },
   apis: {
     '/api/message': postMessage,
     '/api/getBaseInfo': getBaseInfo,
     '/api/postBuildInfo': postBuildInfo,
+    '/api/getQrcode': getQrcode,
   },
 };

@@ -23,3 +23,14 @@ export const postBuildInfo = (params: IConfigForm) => {
     .then((response) => response.json())
     .catch((error) => ElMessage.error(error));
 };
+
+export const getQrcode = (id: string) => {
+  return fetch(`/api/getQrcode?id=${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .catch((error) => ElMessage.error(error));
+};

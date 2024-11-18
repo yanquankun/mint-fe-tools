@@ -91,9 +91,13 @@ const buildPreview = async (prompt, mpConfig) => {
   }
 };
 
-module.exports = async (answer, cwd = null) => {
-  cwd && process.chdir(cwd);
-
+/**
+ * 2024-11-18 16:19:57
+ * @author Mint.Yan
+ * @description miniProgram build
+ * @param {boolean} isFromServer 是否来自web服务构建
+ */
+module.exports = async (answer, isFromServer = false) => {
   const isLog = globalThis['buildLog'] || false;
   if (isLog) {
     const capturedFileName = timestampToTime(+new Date()) + '_mps.log';
@@ -193,9 +197,12 @@ module.exports = async (answer, cwd = null) => {
     _log.info(`TAG： ${tagName} 推送成功`, 'TagName');
   }
 
-  // 群通知
-  if (answer.groupNotice) {
-    _log.done('群通知任务执行中...', 'build');
+  _log.done('小程序构建完成', 'build');
+  console.log('');
+
+  // 群通知 | web服务
+  if (answer.groupNotice || isFromServer) {
+    answer.groupNotice && _log.done('群通知任务执行中...', 'build');
     const extraInfo = {
       user: await getUser(),
       branch: await getBranch(),
@@ -222,14 +229,27 @@ module.exports = async (answer, cwd = null) => {
       const qrcodePath = path.join(process.cwd(), '.mps/previewQrCode/');
       const qrcodeFiles = await getFilesMapWithExtension(qrcodePath, '.jpg');
       options.qrcodeFiles = qrcodeFiles;
+
+      if (isFromServer) {
+        const { sendMessage, qrcodeMap, serverInfo } = require('../lib/http');
+        const { guid } = require('../utils/common');
+
+        const taskId = guid();
+        const url = `http://${serverInfo.hostIP}:${serverInfo.port}/${process.env.projectName}?id=${taskId}`;
+        options.isWebUrl = url;
+        // cache build result
+        qrcodeMap.set(taskId, { ...options, qrcodeFiles });
+        sendMessage({
+          url,
+          buildStatus: 'done',
+        });
+      }
     }
 
     await callHook('noticeTask', options);
   }
 
-  _log.done('小程序构建完成', 'build');
-  console.log('');
   answer.isAtuoUpdateQrcode &&
     _log.warn('已开启自动更新本地版二维码任务，请勿关闭当前命令窗口', 'Warn!!!');
-  !answer.isAtuoUpdateQrcode && !cwd && process.exit(1);
+  !answer.isAtuoUpdateQrcode && !isFromServer && process.exit(1);
 };

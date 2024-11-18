@@ -26,7 +26,7 @@ async function noticeTask(buildInfo) {
 
   const extraInfo = buildInfo.extraInfo || {};
   const qrcodeFiles = buildInfo.qrcodeFiles || [];
-  const tests = [
+  const texts = [
     {
       secondContent: '提交者',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.user}</mis>`,
@@ -41,19 +41,30 @@ async function noticeTask(buildInfo) {
     },
   ];
   if (extraInfo.buildSuccessAppNames)
-    tests.unshift({
+    texts.unshift({
       secondContent: '构建应用',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.buildSuccessAppNames}</mis>`,
     });
   if (extraInfo.tag)
-    tests.push({
+    texts.push({
       secondContent: '生成gitTag',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.tag}</mis>`,
     });
-  const cardList = [...tests];
+  const cardList = [...texts];
   Array.isArray(qrcodeFiles) &&
-    qrcodeFiles.forEach((info) => {
-      cardList.push({
+    qrcodeFiles.forEach((info,index) => {
+      if (buildInfo.isWebUrl && typeof buildInfo.isWebUrl === 'string') {
+        texts.push({
+          secondContent: `小程序`,
+          content: `<mis type='highlight' color=\"#fd642d\">${info.fileName}</mis>`,
+        });
+        if(index === qrcodeFiles.length - 1) {
+          texts.push({
+            secondContent: `本地版地址`,
+            content: `<mis type='web' url=\"${buildInfo.isWebUrl}\">点击打开本地版二维码地址</mis>`,
+          });
+        }
+      } else cardList.push({
         imgText: {
           content: info.fileName,
           url: info.baseUrl,

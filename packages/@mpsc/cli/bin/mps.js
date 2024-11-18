@@ -126,22 +126,34 @@ program
       process.env.version = version;
       process.env.projectName = path.basename(process.cwd());
 
+      const cmdPath = path.resolve(__dirname, '../');
       if (args['--'] && args['--'].includes('nodemon')) {
-        await execa('npx', ['nodemon'], {
-          cwd: path.resolve(__dirname, '../'),
-          stdio: 'inherit',
-          env: {
-            ...process.env,
-            cwd: process.cwd(),
+        await execa(
+          'npx',
+          [
+            'nodemon',
+            '--config',
+            `${cmdPath}/nodemon.json`,
+            '--watch',
+            `${cmdPath}/lib/server.js`,
+            '--watch',
+            `${cmdPath}/lib/http.js`,
+            '--exec',
+            'node',
+            `${cmdPath}/lib/server.js`,
+          ],
+          {
+            stdio: 'inherit',
+            env: {
+              ...process.env,
+            },
           },
-        });
+        );
       } else {
-        await execa('node', ['lib/server.js'], {
-          cwd: path.resolve(__dirname, '../'),
+        await execa('node', [`${cmdPath}/lib/server.js`], {
           stdio: 'inherit',
           env: {
             ...process.env,
-            cwd: process.cwd(),
           },
         });
       }

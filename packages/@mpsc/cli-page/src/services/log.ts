@@ -4,6 +4,7 @@ enum LogLevel {
   WARN = 'warn',
   ERROR = 'error',
   LOG = 'log',
+  LINK = 'link',
 }
 
 interface ILog {
