@@ -73,7 +73,7 @@ const parseBodyParam = (contentType, body) => {
 
 let postMessageEvent;
 const sendEvent = (data) => {
-  postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n\n`);
+  postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n`);
 };
 const interval = setInterval(() => {
   const now = new Date();
