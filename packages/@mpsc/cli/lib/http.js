@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { getPathAbsoluteRoot } = require('../utils/file');
 const _log = require('../utils/logger');
+let postMessageEvent;
 // const url = require('url');
 
 const mimeTypes = {
@@ -71,14 +72,10 @@ const parseBodyParam = (contentType, body) => {
   return parsedData;
 };
 
-let postMessageEvent;
-const sendEvent = (data) => {
+const sendMessage = (data) => {
   postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n`);
 };
-const interval = setInterval(() => {
-  const now = new Date();
-  sendEvent({ message: 'Hello, Client!', time: now.toISOString() });
-}, 3000);
+
 const postMessage = ({ req, res }) => {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
@@ -88,7 +85,6 @@ const postMessage = ({ req, res }) => {
   postMessageEvent = res;
 
   req.on('close', () => {
-    clearInterval(interval);
     res.end();
   });
 };
@@ -129,6 +125,7 @@ module.exports = {
   registerWebRouteRequest,
   registerHttpError,
   postMessageEvent,
+  sendMessage,
   apis: {
     '/api/message': postMessage,
     '/api/getBaseInfo': getBaseInfo,
