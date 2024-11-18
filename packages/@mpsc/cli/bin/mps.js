@@ -132,6 +132,7 @@ program
           stdio: 'inherit',
           env: {
             ...process.env,
+            cwd: process.cwd(),
           },
         });
       } else {
@@ -140,6 +141,7 @@ program
           stdio: 'inherit',
           env: {
             ...process.env,
+            cwd: process.cwd(),
           },
         });
       }

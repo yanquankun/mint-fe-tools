@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { getPathAbsoluteRoot } = require('../utils/file');
 const _log = require('../utils/logger');
+const buildMp = require('../tools/buildMp');
 let postMessageEvent;
 // const url = require('url');
 
@@ -73,7 +74,7 @@ const parseBodyParam = (contentType, body) => {
 };
 
 const sendMessage = (data) => {
-  postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n`);
+  postMessageEvent && postMessageEvent.write(`data: ${JSON.stringify(data)}\n\n`);
 };
 
 const postMessage = ({ req, res }) => {
@@ -83,6 +84,7 @@ const postMessage = ({ req, res }) => {
     Connection: 'keep-alive',
   });
   postMessageEvent = res;
+  sendMessage({ message: 'postEvent connect success' });
 
   req.on('close', () => {
     res.end();
@@ -113,9 +115,10 @@ const postBuildInfo = ({ req, res }) => {
     });
     const response = createResponse({
       data: {
-        message: 'Message received successfully!',
+        message: 'build start',
       },
     });
+    buildMp(params, process.env.cwd);
     res.end(response);
   });
 };
@@ -124,7 +127,6 @@ module.exports = {
   registerStaticRequest,
   registerWebRouteRequest,
   registerHttpError,
-  postMessageEvent,
   sendMessage,
   apis: {
     '/api/message': postMessage,

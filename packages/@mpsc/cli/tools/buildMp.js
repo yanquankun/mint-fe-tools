@@ -91,7 +91,9 @@ const buildPreview = async (prompt, mpConfig) => {
   }
 };
 
-module.exports = async (answer) => {
+module.exports = async (answer, cwd = null) => {
+  cwd && process.chdir(cwd);
+
   const isLog = globalThis['buildLog'] || false;
   if (isLog) {
     const capturedFileName = timestampToTime(+new Date()) + '_mps.log';
@@ -229,5 +231,5 @@ module.exports = async (answer) => {
   console.log('');
   answer.isAtuoUpdateQrcode &&
     _log.warn('已开启自动更新本地版二维码任务，请勿关闭当前命令窗口', 'Warn!!!');
-  !answer.isAtuoUpdateQrcode && process.exit(1);
+  !answer.isAtuoUpdateQrcode && !cwd && process.exit(1);
 };

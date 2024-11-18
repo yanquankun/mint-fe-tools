@@ -1,8 +1,9 @@
 enum LogLevel {
-  DEBUG = 'debug',
+  DONE = 'done',
   INFO = 'info',
   WARN = 'warn',
   ERROR = 'error',
+  LOG = 'log',
 }
 
 interface ILog {

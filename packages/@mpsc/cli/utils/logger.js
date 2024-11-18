@@ -7,6 +7,13 @@ const fs = require('fs');
 
 function _log(type, tag, message) {
   if (message) {
+    const { sendMessage } = require('../lib/http');
+    typeof sendMessage === 'function' &&
+      sendMessage({
+        level: type,
+        message: message,
+      });
+
     events.emit('log', {
       message,
       type,
@@ -52,11 +59,10 @@ module.exports = {
   },
   error: (msg, tag = null) => {
     console.error(format(chalk.bgRed(' ERROR ') + (tag ? chalkTag(tag) : ''), chalk.red(msg)));
-    _log('error', tag, msg);
     if (msg instanceof Error) {
       console.error(msg.stack);
       _log('error', tag, msg.stack);
-    }
+    } else _log('error', tag, msg);
   },
   clearConsole: (title) => {
     if (process.stdout.isTTY) {

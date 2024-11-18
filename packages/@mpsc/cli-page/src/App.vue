@@ -46,7 +46,7 @@ import Log from './components/Log.vue';
 import Config from './components/Config.vue';
 import Result from './components/Result.vue';
 import { ElMessage } from 'element-plus';
-import { getBaseInfo, postBuildInfo } from '@/services/fetch';
+import { getBaseInfo } from '@/services/fetch';
 import type { IConfigForm } from '@/services/config';
 
 const id = new URLSearchParams(location.search).get('id') || '';
@@ -60,14 +60,9 @@ const baseInfo = ref<{
 });
 
 const startBuild = (form: IConfigForm) => {
-  postBuildInfo(form).then((response) => {
-    if (response.code !== 0) {
-      return ElMessage.error(response.message);
-    }
-    if (logger.value) {
-      logger.value.startWatch();
-    }
-  });
+  if (logger.value) {
+    logger.value.startWatch(form);
+  }
 };
 const clearPage = () => {
   if (logger.value) {
