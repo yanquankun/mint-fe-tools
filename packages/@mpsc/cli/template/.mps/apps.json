@@ -8,8 +8,8 @@
     }
   ],<% if (Boolean(lbgNoticeTaskTemp)) { %>
   "atUsers": [{
-    "oa":"填写@人的OA账号",
-    "name":"填写@人的姓名"
+    "userId":"填写@人的OA账号",
+    "realName":"填写@人的姓名"
   }],
   <% } else { %>
   "atUsers": [],

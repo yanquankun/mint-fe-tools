@@ -50,17 +50,17 @@ async function noticeTask(buildInfo) {
       secondContent: '生成gitTag',
       content: `<mis type='highlight' color=\"#fd642d\">${extraInfo.tag}</mis>`,
     });
+
   const cardList = [...texts];
   Array.isArray(qrcodeFiles) &&
     qrcodeFiles.forEach((info,index) => {
       if (buildInfo.isWebUrl && typeof buildInfo.isWebUrl === 'string') {
-        texts.push({
+        cardList.push({
           secondContent: `小程序`,
           content: `<mis type='highlight' color=\"#fd642d\">${info.fileName}</mis>`,
         });
         if(index === qrcodeFiles.length - 1) {
-          texts.push({
-            secondContent: `本地版地址`,
+          cardList.push({
             content: `<mis type='web' url=\"${buildInfo.isWebUrl}\">点击打开本地版二维码地址</mis>`,
           });
         }
@@ -76,11 +76,9 @@ async function noticeTask(buildInfo) {
       });
     });
 
-  const atUsers = (buildInfo.extraInfo.atUsers || []).map((user) => {
-    return {
-      oa: user,
-    };
-  });
+    userList.length && cardList.push({
+      userList: extraInfo?.atUsers ?? [],
+    })  
 
   await axios
     .post(
@@ -89,7 +87,6 @@ async function noticeTask(buildInfo) {
         senderId,
         toId: groupId,
         showType: 'MIS:cardInteractive',
-        atUsers,
         content: JSON.stringify({
           type: 'MIS:cardInteractive',
           card: {
