@@ -230,7 +230,7 @@ module.exports = async (answer, isFromServer = false) => {
       ];
       isFromServer &&
         sendMessage({
-          level: 'info ',
+          level: 'done',
           message: '推送小程序后台成功，如需设置体验版请联系上述开发人员',
         });
     } else {
