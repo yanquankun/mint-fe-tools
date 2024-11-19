@@ -217,6 +217,9 @@ module.exports = async (answer, isFromServer = false) => {
       isProd: answer.isProd,
       extraInfo,
     };
+
+    const { sendMessage } = require('../lib/http');
+
     if (answer.isProd) {
       options.qrcodeFiles = [
         {
@@ -225,13 +228,18 @@ module.exports = async (answer, isFromServer = false) => {
           fileName: '微信扫码右侧小程序助手二维码访问最新体验版，如需设置体验版请联系上述开发人员',
         },
       ];
+      isFromServer &&
+        sendMessage({
+          level: 'info ',
+          message: '推送小程序后台成功，如需设置体验版请联系上述开发人员',
+        });
     } else {
       const qrcodePath = path.join(process.cwd(), '.mps/previewQrCode/');
       const qrcodeFiles = await getFilesMapWithExtension(qrcodePath, '.jpg');
       options.qrcodeFiles = qrcodeFiles;
 
       if (isFromServer) {
-        const { sendMessage, qrcodeMap, serverInfo } = require('../lib/http');
+        const { qrcodeMap, serverInfo } = require('../lib/http');
         const { guid } = require('../utils/common');
 
         const taskId = guid();
@@ -246,7 +254,9 @@ module.exports = async (answer, isFromServer = false) => {
       }
     }
 
-    await callHook('noticeTask', options);
+    if (answer.groupNotice) {
+      await callHook('noticeTask', options);
+    }
   }
 
   answer.isAtuoUpdateQrcode &&
