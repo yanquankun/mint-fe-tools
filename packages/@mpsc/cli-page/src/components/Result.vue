@@ -22,7 +22,10 @@
     class="container"
   >
     <el-empty v-if="!result?.qrcodeFiles.length" description="暂无数据" />
-    <div class="container-qrcode" v-else>
+    <div class="container-qrcode" id="capture" ref="canvasRef" v-else>
+      <div class="container-qrcode-image-btn" id="exportImgBtn" @click="exportImg">
+        导出结果为图片
+      </div>
       <div class="container-qrcode-item" v-for="(item, index) in result?.qrcodeFiles" :key="index">
         <span class="container-qrcode-item-name">{{ item.fileName }}</span>
         <el-image
@@ -44,10 +47,12 @@ import { ref, onMounted } from 'vue';
 import type { IResult } from '@/services/result';
 import { ElMessage } from 'element-plus';
 import { getQrcode as _getQrcode } from '@/services/fetch';
+import html2canvas from 'html2canvas';
 
 const id = new URLSearchParams(location.search).get('id') || '';
 const loading = ref<boolean>(false);
 const result = ref<IResult>();
+const canvasRef = ref<HTMLElement>();
 
 const getQrcode = () => {
   _getQrcode(id).then((response) => {
@@ -56,6 +61,28 @@ const getQrcode = () => {
     }
     result.value = response.data;
   });
+};
+const exportImg = async () => {
+  try {
+    const element = canvasRef.value;
+    if (element) {
+      const canvas = await html2canvas(element, {
+        ignoreElements: (element) => {
+          if (element.id === 'exportImgBtn') return true;
+          return false;
+        },
+      });
+      const imgData = canvas.toDataURL('image/png');
+
+      // 下载图片
+      const link = document.createElement('a');
+      link.href = imgData;
+      link.download = '小程序本地版二维码.png';
+      link.click();
+    }
+  } catch (error) {
+    ElMessage.error('截图失败');
+  }
 };
 onMounted(() => {
   getQrcode();
@@ -70,8 +97,28 @@ onMounted(() => {
   border-radius: 6px;
   padding: 10px;
   box-sizing: border-box;
+  position: relative;
 
   &-qrcode {
+    &-image-btn {
+      background: rgb(240, 248, 255);
+      display: inline-flex;
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 4px 5px;
+      border-radius: 0 6px;
+      cursor: pointer;
+      color: #856b6b;
+      font-weight: 600;
+      border: 0 dashed #dcdfe6;
+      border-width: 0 0 3px 3px;
+
+      &:hover {
+        background: rgb(248, 248, 248);
+      }
+    }
+
     &-item {
       display: flex;
       justify-content: center;
