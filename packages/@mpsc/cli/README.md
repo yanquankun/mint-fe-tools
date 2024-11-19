@@ -77,6 +77,15 @@
 
 - run `mpsc git` 获取本 cli 输出的一些 git 相关内容
 
+- run `mpsc server`  
+  `如果通过该界面构建后，在noticeHook中输出的构建结果中，将传递isWebUrl参数作为构建结果页面地址`
+  运行该命令，将打开如下的构建 web 主页
+  ![构建主页](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-home.png 'Magic Gardens')
+  构建完成后，如果是本地版，将给出二维码结果页面
+  ![构建输出](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-build.png 'Magic Gardens')
+  此页面为构建结果页面，矩阵小程序将会展示多个二维码结果，可点击导出为图片
+  ![构建结果](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-result.png 'Magic Gardens')
+
 ### 配置目录说明
 
 |--.mps ci 配置目录  
@@ -209,7 +218,9 @@ buildInfo {
     qrcodeFiles:[{
         baseUrl: String, // 二维码地址，如果是本地版将生成base64图片地址否则提供微信小程序助手二维码供使用者查看体验版,
         fileName: String // 二维码文件名称
-    }]
+    }],
+    // 通过页面进行小程序构建后，本地版二维码将透传该字段
+    isWebUrl: String, // 本地版二维码结果页面地址
 }
 ```
 

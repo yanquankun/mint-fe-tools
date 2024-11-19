@@ -8,6 +8,7 @@ const {
   apis,
 } = require('./http');
 const { serverInfo } = require('./http');
+const { openUrlWithBrowser } = require('../utils/common');
 
 let server;
 
@@ -23,12 +24,9 @@ const startHttpWatch = function () {
   });
 
   server.listen(serverInfo.port, serverInfo.hostIP, () => {
-    _log.info(
-      `开启服务，访问 ${_log.chalk.blue(
-        `http://${serverInfo.hostIP}:${serverInfo.port}/${process.env.projectName} `,
-      )}`,
-      'createServer',
-    );
+    const url = `http://${serverInfo.hostIP}:${serverInfo.port}/${process.env.projectName}`;
+    _log.info(`开启服务，访问 ${_log.chalk.blue(url)}`, 'createServer');
+    openUrlWithBrowser(url);
     _log.warn(`在局域网内其他设备可以访问此页面【使用期间请不要关闭该窗口】`, 'createServer');
   });
 };

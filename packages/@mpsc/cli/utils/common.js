@@ -1,4 +1,5 @@
 const os = require('os');
+const { spawn } = require('child_process');
 
 const timestampToTime = (timestamp) => {
   timestamp = timestamp ? timestamp : null;
@@ -39,9 +40,17 @@ function guid() {
   });
 }
 
+function openUrlWithBrowser(url) {
+  const openCommand =
+    process.platform === 'win32' ? 'start' : process.platform === 'darwin' ? 'open' : 'xdg-open';
+
+  spawn(openCommand, [url]);
+}
+
 module.exports = {
   timestampToTime,
   checkVersion,
   getLocalIP,
   guid,
+  openUrlWithBrowser,
 };

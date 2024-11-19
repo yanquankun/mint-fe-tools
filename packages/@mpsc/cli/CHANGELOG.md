@@ -21,3 +21,5 @@
 ### v0.0.5
 
 - add apps.json 增加 atUsers 配置，在 notice 选项中，可配置@相关方
+- add apps.json 增加 port 配置，使用网页版的 http 端口号
+- add mpsc server 启动脚手架可视化页面
