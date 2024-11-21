@@ -27,3 +27,7 @@
 ### v0.0.6
 
 - fix some bugs
+
+### v0.0.7
+
+- fix noticeHook
