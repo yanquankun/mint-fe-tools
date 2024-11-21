@@ -76,6 +76,7 @@ async function noticeTask(buildInfo) {
       });
     });
 
+    const userList = buildInfo.extraInfo?.atUsers || [];
     userList.length && cardList.push({
       userList: extraInfo?.atUsers ?? [],
     })  
