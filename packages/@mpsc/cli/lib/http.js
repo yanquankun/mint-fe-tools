@@ -5,7 +5,7 @@ const _log = require('../utils/logger');
 const buildMp = require('../tools/buildMp');
 const url = require('url');
 const { getLocalIP } = require('../utils/common');
-const { getMpsAppJson } = require('./../tools/getProjectJson');
+const { getMpsAppJson, getProjectPackage } = require('./../tools/getProjectJson');
 
 const hostIP = getLocalIP();
 const mpsJson = getMpsAppJson();
@@ -130,6 +130,7 @@ const postBuildInfo = ({ req, res }) => {
   });
   req.on('end', () => {
     const params = parseBodyParam(req.headers['content-type'], body);
+    params.version = params.version || getProjectPackage().version;
     _log.info(`${req.url} 请求参数: ${JSON.stringify(params)}`, 'HTTP');
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',

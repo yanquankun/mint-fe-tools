@@ -21,7 +21,7 @@ function getProject(appConfig) {
   });
 }
 
-const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
+const uploadMp = async (prompt, mpConfig, buildSuccessAppNames, isFromServer) => {
   const project = getProject(mpConfig);
   isDebug && _log.info(JSON.stringify(project), 'getProject');
   logWithSpinner(_log.chalk.green('⚓'), `${mpConfig.appName} 小程序构建中...`);
@@ -46,13 +46,13 @@ const uploadMp = async (prompt, mpConfig, buildSuccessAppNames) => {
     _log.info(`${mpConfig.appName} 上传成功，请自行到微信后台设置体验版`, 'uploadMp');
   } catch (error) {
     _log.error(`${mpConfig.appName} 上传微信后台失败，原因：${error}`, 'uploadMp');
-    process.exit(1);
+    !isFromServer && process.exit(1);
   } finally {
     successSpinner();
   }
 };
 
-const buildPreview = async (prompt, mpConfig) => {
+const buildPreview = async (prompt, mpConfig, isFromServer) => {
   const project = getProject(mpConfig);
   isDebug && _log.info(JSON.stringify(project), 'getProject');
   logWithSpinner(_log.chalk.green('⚓'), `${mpConfig.appName} 小程序构建中...`);
@@ -85,7 +85,7 @@ const buildPreview = async (prompt, mpConfig) => {
     _log.info(`${mpConfig.appName} 设置预览成功`, 'uploadMp');
   } catch (error) {
     _log.error(`${mpConfig.appName} 生成预览版失败，原因：${error}`, 'buildPreview');
-    process.exit(1);
+    !isFromServer && process.exit(1);
   } finally {
     successSpinner();
   }
@@ -165,9 +165,9 @@ module.exports = async (answer, isFromServer = false) => {
       privateKeyPath,
     };
     if (answer.isProd) {
-      await uploadMp(answer, mpInfo, buildSuccessAppNames);
+      await uploadMp(answer, mpInfo, buildSuccessAppNames, isFromServer);
     } else {
-      await buildPreview(answer, mpInfo);
+      await buildPreview(answer, mpInfo, isFromServer);
     }
 
     await callHook('afterTaskBuild');
