@@ -1,6 +1,6 @@
 {
   "name": "@mpsc/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "小程序ci构建工具脚手架",
   "bin": {
     "mpsc": "./bin/mps.js"
