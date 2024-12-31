@@ -47,7 +47,7 @@
 
 ### mpsc command
 
-![mpsc](https://www.yanquankun.com:9300/cdn/mpsc/mpsc%E6%8C%87%E4%BB%A4.png 'Magic Gardens')
+![mpsc](https://www.yanquankun.cn/cdn/mpsc/mpsc%E6%8C%87%E4%BB%A4.png 'Magic Gardens')
 
 - `所有指令请在与.mps同级目录进行操作`
 - run `mpsc` or `mpsc -h` or `mpsc --help` 查看脚手架帮助
@@ -80,11 +80,11 @@
 - run `mpsc server`  
   `如果通过该界面构建后，在noticeHook中输出的构建结果中，将传递isWebUrl参数作为构建结果页面地址`
   运行该命令，将打开如下的构建 web 主页
-  ![构建主页](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-home.png 'Magic Gardens')
+  ![构建主页](https://www.yanquankun.cn/cdn/mpsc/mpsc-cli-page-home.png 'Magic Gardens')
   构建完成后，如果是本地版，将给出二维码结果页面
-  ![构建输出](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-build.png 'Magic Gardens')
+  ![构建输出](https://www.yanquankun.cn/cdn/mpsc/mpsc-cli-page-build.png 'Magic Gardens')
   此页面为构建结果页面，矩阵小程序将会展示多个二维码结果，可点击导出为图片
-  ![构建结果](https://www.yanquankun.com:9300/cdn/mpsc/mpsc-cli-page-result.png 'Magic Gardens')
+  ![构建结果](https://www.yanquankun.cn/cdn/mpsc/mpsc-cli-page-result.png 'Magic Gardens')
 
 ### 配置目录说明
 
@@ -226,10 +226,10 @@ buildInfo {
 
 ### 原理图
 
-![mps-cli工具流程图](https://www.yanquankun.com:9300/cdn/mpsc/mp-ci.png 'Magic Gardens')
+![mps-cli工具流程图](https://www.yanquankun.cn/cdn/mpsc/mp-ci.png 'Magic Gardens')
 
 ### 构建通知截图
 
-![mps-cli构建效果图](https://www.yanquankun.com:9300/cdn/mpsc/%E7%94%9F%E4%BA%A7%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')
+![mps-cli构建效果图](https://www.yanquankun.cn/cdn/mpsc/%E7%94%9F%E4%BA%A7%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')
 
-![mps-cli构建效果图](https://www.yanquankun.com:9300/cdn/mpsc/%E6%9C%AC%E5%9C%B0%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')
+![mps-cli构建效果图](https://www.yanquankun.cn/cdn/mpsc/%E6%9C%AC%E5%9C%B0%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')

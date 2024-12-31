@@ -224,7 +224,7 @@ module.exports = async (answer, isFromServer = false) => {
       options.qrcodeFiles = [
         {
           baseUrl:
-            'https://www.yanquankun.com:9300/cdn/mpsc/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%8A%A9%E6%89%8B.jpeg',
+            'https://www.yanquankun.cn/cdn/mpsc/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%8A%A9%E6%89%8B.jpeg',
           fileName: '微信扫码右侧小程序助手二维码访问最新体验版，如需设置体验版请联系上述开发人员',
         },
       ];
