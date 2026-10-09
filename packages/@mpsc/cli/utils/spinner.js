@@ -1,71 +1,38 @@
-const ora = require('ora');
-const chalk = require('chalk');
+const { clack } = require('./terminal');
 const { emitLog } = require('./logger');
-
-const spinner = ora();
-let lastMsg = null;
-let isPaused = false;
+let active;
+let lastMsg;
 
 exports.logWithSpinner = (symbol, msg) => {
-  if (!msg) {
-    msg = symbol;
-    symbol = chalk.green('✔');
-  }
-  if (lastMsg) {
-    spinner.stopAndPersist({
-      symbol: lastMsg.symbol,
-      text: lastMsg.text,
-    });
-  }
-  spinner.text = ' ' + msg;
-  lastMsg = {
-    symbol: symbol + ' ',
-    text: msg,
-  };
-
-  emitLog('info', symbol, msg);
-
-  spinner.start();
-};
-
-exports.stopSpinner = (persist) => {
-  if (!spinner.isSpinning) {
-    return;
-  }
-
-  if (lastMsg && persist !== false) {
-    spinner.stopAndPersist({
-      symbol: lastMsg.symbol,
-      text: lastMsg.text,
-    });
+  exports.stopSpinner();
+  lastMsg = msg || symbol;
+  emitLog('info', 'progress', lastMsg);
+  if (process.stdout.isTTY && !process.env.CI) {
+    active = clack.spinner();
+    active.start(lastMsg);
   } else {
-    spinner.stop();
-  }
-  lastMsg = null;
-};
-
-exports.pauseSpinner = () => {
-  if (spinner.isSpinning) {
-    spinner.stop();
-    isPaused = true;
+    clack.log.step(lastMsg);
   }
 };
 
+exports.stopSpinner = () => {
+  if (active) active.stop(lastMsg);
+  active = undefined;
+};
+exports.pauseSpinner = exports.stopSpinner;
 exports.resumeSpinner = () => {
-  if (isPaused) {
-    spinner.start();
-    isPaused = false;
-  }
+  if (lastMsg) exports.logWithSpinner(lastMsg);
 };
-
-exports.failSpinner = (text) => {
-  spinner.fail(text);
+exports.failSpinner = (text = '执行失败') => {
+  if (active) active.stop(text, 1);
+  else clack.log.error(text);
+  active = undefined;
+  lastMsg = undefined;
 };
-
-exports.successSpinner = (text) => {
-  text ? spinner.succeed(text) : spinner.stop();
-  lastMsg = null;
-  this.stopSpinner(false);
-
+exports.successSpinner = (text = '执行完成') => {
+  if (active) active.stop(text);
+  else clack.log.success(text);
+  active = undefined;
+  lastMsg = undefined;
   emitLog('success', 'successSpinner', text);
 };

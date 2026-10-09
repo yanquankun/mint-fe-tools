@@ -233,3 +233,15 @@ buildInfo {
 ![mps-cli构建效果图](https://www.yanquankun.cn/cdn/mpsc/%E7%94%9F%E4%BA%A7%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')
 
 ![mps-cli构建效果图](https://www.yanquankun.cn/cdn/mpsc/%E6%9C%AC%E5%9C%B0%E7%89%88%E9%80%9A%E7%9F%A5.png 'Magic Gardens')
+
+## 终端交互
+
+运行需要 Node.js 14.18+（Clack 使用 `node:` 内置模块入口），建议使用当前受支持的 Node.js LTS。
+
+`mpsc init`、`mpsc clean --self` 和 `mpsc build` 使用 `@clack/prompts`：方向键选择，Enter 确认，Ctrl+C 取消。版本号输入错误可原地修正；覆盖配置、删除配置、群通知、正式发布和创建 Tag 默认均不执行。
+
+需要问答的命令必须在交互式终端中执行，CI/重定向输入环境会立即返回错误；原有服务端构建接口不受影响。取消返回 130，执行失败返回非零，成功返回 0。构建日志和服务端日志事件仍然保留。
+
+本次锁文件仅将已失效的 cnpm 镜像下载地址迁移到 npm 官方源，保留现有依赖版本。
+
+验证：在此包目录使用 Node.js 18+ 执行 `npm run test:terminal`。

@@ -9,6 +9,17 @@ const git = require('../tools/git');
 const path = require('path');
 const execa = require('execa');
 const minimist = require('minimist');
+const { clack, CancelledError } = require('../utils/terminal');
+const { failSpinner } = require('../utils/spinner');
+
+function reportError(error) {
+  if (error instanceof CancelledError) clack.cancel(error.message);
+  else {
+    failSpinner('命令执行失败');
+    _log.error(error);
+  }
+  process.exitCode = error.exitCode || 1;
+}
 
 program.name('mpscli').description('小程序ci构建工具脚手架').version(version);
 
@@ -34,13 +45,13 @@ program
     try {
       const fn = await loadLocalModule('../command/init.js');
       isFunction(fn) &&
-        fn.call(null, generator, {
+        (await fn.call(null, generator, {
           path: name.path,
           force: name.force,
           lbg: name.lbg,
-        });
+        }));
     } catch (e) {
-      _log.error(e, 'init');
+      reportError(e);
     }
   });
 
@@ -57,9 +68,9 @@ program
         globalThis['cleanDebug'] = true;
       }
       const fn = await loadLocalModule('../command/clean.js');
-      isFunction(fn) && fn.call(null, generator, { isCleanSelf: Boolean(name.self) });
+      isFunction(fn) && (await fn.call(null, generator, { isCleanSelf: Boolean(name.self) }));
     } catch (e) {
-      _log.error(e, 'clean');
+      reportError(e);
     }
   });
 
@@ -107,11 +118,11 @@ program
     try {
       const fn = await loadLocalModule('../command/build.js');
       isFunction(fn) &&
-        fn.call(null, {
+        (await fn.call(null, {
           log: name.log,
-        });
+        }));
     } catch (e) {
-      _log.error(e, 'build');
+      reportError(e);
     }
   });
 
@@ -158,7 +169,7 @@ program
         });
       }
     } catch (e) {
-      _log.error(e, 'server');
+      reportError(e);
     }
   });
 
@@ -173,4 +184,4 @@ program.on('--help', () => {
   console.log();
 });
 
-program.parse();
+program.parseAsync(process.argv).catch(reportError);

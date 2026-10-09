@@ -9,7 +9,7 @@ const { getCommit, getUser, getBranch, getRemote } = require('./git');
 const isDebug = globalThis['buildDebug'] || false;
 const { callHook } = require('./hook');
 const { getFilesMapWithExtension } = require('../utils/file');
-const { logWithSpinner, successSpinner } = require('../utils/spinner');
+const { logWithSpinner, successSpinner, failSpinner } = require('../utils/spinner');
 
 function getProject(appConfig) {
   return new ci.Project({
@@ -43,12 +43,12 @@ const uploadMp = async (prompt, mpConfig, buildSuccessAppNames, isFromServer) =>
 
     isDebug && _log.info(JSON.stringify(uploadResult), 'uploadResult');
 
+    successSpinner('上传完成');
     _log.info(`${mpConfig.appName} 上传成功，请自行到微信后台设置体验版`, 'uploadMp');
   } catch (error) {
+    failSpinner('小程序构建失败');
     _log.error(`${mpConfig.appName} 上传微信后台失败，原因：${error}`, 'uploadMp');
-    !isFromServer && process.exit(1);
-  } finally {
-    successSpinner();
+    if (!isFromServer) throw error;
   }
 };
 
@@ -82,12 +82,12 @@ const buildPreview = async (prompt, mpConfig, isFromServer) => {
 
     isDebug && _log.info(JSON.stringify(previewResult), 'buildPreview');
 
+    successSpinner('预览完成');
     _log.info(`${mpConfig.appName} 设置预览成功`, 'uploadMp');
   } catch (error) {
+    failSpinner('小程序构建失败');
     _log.error(`${mpConfig.appName} 生成预览版失败，原因：${error}`, 'buildPreview');
-    !isFromServer && process.exit(1);
-  } finally {
-    successSpinner();
+    if (!isFromServer) throw error;
   }
 };
 
@@ -130,7 +130,7 @@ module.exports = async (answer, isFromServer = false) => {
       '⚓',
       `小程序执行${manager} ${manager === 'yarn' ? command : 'run ' + command} 中...`,
     );
-    execa.sync(manager, args, {
+    await execa(manager, args, {
       cwd: process.cwd(),
     });
     successSpinner('执行完成');
@@ -138,7 +138,7 @@ module.exports = async (answer, isFromServer = false) => {
 
   // 本地版 先清空qrcode目录
   if (!answer.isProd) {
-    execa('mpsc', ['clean'], {
+    await execa('mpsc', ['clean'], {
       cwd: process.cwd(),
     });
   }
@@ -261,5 +261,4 @@ module.exports = async (answer, isFromServer = false) => {
 
   answer.isAtuoUpdateQrcode &&
     _log.warn('已开启自动更新本地版二维码任务，请勿关闭当前命令窗口', 'Warn!!!');
-  !answer.isAtuoUpdateQrcode && !isFromServer && process.exit(1);
 };
